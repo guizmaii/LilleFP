@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pure FP</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif', 'Helvetica'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz', 'Gill Sans';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Consolas', 'Courier New'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: center, middle
+
+# Pure FP
+Jules Ivanic • `@JulienTruffaut`
+
+???
+- notes here
+- see https://remarkjs.com/#1
+
+---
+# Inline Scala examples
+
+```scala
+case class Person(name: String, age: Int)
+```
+
+```scala
+val john = Person("John", 23)
+// john: Person = Person(John,23)
+
+john.age
+// res0: Int = 23
+
+john.copy(age = 30)
+// res1: Person = Person(John,30)
+```
+
+???
+- see https://github.com/tpolecat/tut
+
+---
+# Scala examples from core module
+
+```scala
+import com.guizmaii.talk.lillefp.Foo.{FooInt, FooString}
+```
+
+```scala
+val fooInt = FooInt(5)
+// fooInt: com.guizmaii.talk.lillefp.Foo.FooInt = FooInt(5)
+
+val fooString = FooString("Hello World")
+// fooString: com.guizmaii.talk.lillefp.Foo.FooString = FooString(Hello World)
+
+val foos = List(fooInt, fooString)
+// foos: List[com.guizmaii.talk.lillefp.Foo] = List(FooInt(5), FooString(Hello World))
+```
+
+---
+class: center, middle
+
+# Thanks!
+Code and slides at `guizmaii/LilleFP` on GitHub
+
+## Questions?
+
+
+
+
+
+ </textarea>
+    <script src="remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
