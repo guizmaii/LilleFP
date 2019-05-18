@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Pure FP ?</title>
     <meta charset="utf-8">
     <style>
@@ -13,21 +13,35 @@
         font-family: 'Yanone Kaffeesatz', 'Gill Sans';
         font-weight: normal;
       }
+      table {
+        border-collapse: collapse;
+      }
+      th, td {
+        padding: 30px;
+        border: 1px solid black;
+      }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Consolas', 'Courier New'; }
+      .red { color: red; }
+      .bold { font-weight: bold; }
+      .center {
+        text-align: center;
+        margin-left: 5%;
+        margin-right: 5%;
+      }
     </style>
-  </head>
-  <body>
-    <textarea id="source">
+</head>
+<body>
+<textarea id="source">
 
-```tut:invisible
 
-```
 
 class: center, middle
 
 # Pure FP ?
 
  🤔
+
+### A journey from imperative OO to pure functional programming
 
 Jules Ivanic • `@guizmaii`
 
@@ -41,41 +55,35 @@ Jules Ivanic • `@guizmaii`
 
 ## Jules Ivanic
 
+ - 30 ans
+
  - Professional developer since 5 years.
+
+ - Mostly Scala/FP developer today
 
  - Ex-CTO @ Colisweb
 
- - Passionate surfer since I'm 11. Leaving to Australia in June 🏄🌊
+ - Passionate surfer since I'm 11. Leaving to Australia in June 🌊🏄
 
 ???
 Empty
 ---
-# Disclaimer #1
+# Summary
 
-<br />
-<br />
-<br />
-<br />
-<br />
+ 1. Disclaimer
 
-.center.bold[
+ 2. Functional programming ?
 
-Je suis direct... mais gentil
------------------------------
+ 3. Impure FP ?
 
-]
+ 4. Pure FP ?
 
+ 5. Conlusion
 
-???
-Ma forme va souvent à l'encontre de mon fond. J'en suis désolé. J'essaye de m'améliorer sur ce point mais il faut que vous
-compreniez que ce n'est pas simple pour moi.
+ 6. Questions
 
-Je vous remercie donc d'avance pour votre indulgence.
-Si mes propos vous choque/dérange/autre, n'hésitez pas à m'interropre pour me le faire savoir. J'essaierai de reformuler.
-
-C'est bon, maintenant que vous êtes prévenu, on y va ? Go !
 ---
-# Disclaimer #2
+# 1. Disclaimer
 
 <br />
 <br />
@@ -88,39 +96,227 @@ C'est bon, maintenant que vous êtes prévenu, on y va ? Go !
 ]
 
 ???
-empty
+Apprendre est un processus personnel. Je ne peux rien vous apprendre.
+Je peux vous montrer, vous expliquer mais la compréhension de ce que je vous montre/explique se passe dans votre tête.
+
+Apprendre demande du travail personnel. Vous n'apprenez pas juste en regardant un talk.
+
+Sur des sujets non triviaux, il faut que vous gagner votre propre "intuition".
+C'est cette intuition qui vous permet de comprendre les choses complexes.
+
+Je peux vous partager mon intuition, plus quelques autres si j'en connais d'autres.
+Si une de ces intuitions vous parle, cool. Cela va vous permettre de comprendre.
+Sinon, il va falloir que vous travailliez pour réussir à trouver votre propre intuition.
+Ce processus peut-être long. Cela dépend de plein de paramêtres: du sujet, de votre proximité avec celui-ci, etc.
+
+Pour moi, cette notion d'"intuition" est essentiel, c'est pourquoi je tenais à prendre ces deux minutes pour vous en parler.
 ---
-# Inline Scala examples
+# Imperative OO
 
-```tut:silent
-case class Person(name: String, age: Int)
+```java
+// I used to write things like that...
+
+class Person {
+
+  private String name;
+  private Int age;
+  private String address;
+
+  public Person(String name, Int age, String address) {
+
+    if (age < 0 || age > 120) {
+      throw new RuntimeException("age is invalid");
+    }
+
+    this.name = name; this.age = age; this.address = address;
+  }
+
+  public String getName {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  ...
+}
 ```
-
-```tut:book
-val john = Person("John", 23)
-
-john.age
-
-john.copy(age = 30)
-```
-
-???
-- see https://github.com/tpolecat/tut
-
 ---
-# Scala examples from core module
+# (Synchronous) Imperative OO
 
-```tut:silent
-import com.guizmaii.talk.lillefp.Foo.{FooInt, FooString}
-```
+```java
+// I used to write things like that...
 
-```tut:book
-val fooInt = FooInt(5)
-val fooString = FooString("Hello World")
+class PersonRepo {
 
-val foos = List(fooInt, fooString)
+  private DB dbInstance;
+
+  public PersonRepo(DB dbInstance) {
+    this.dbInstance = dbInstance;
+  }
+
+  public void savePerson(Person p, GpsPoint point) {
+    dbInstance.query(
+      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+      p.name, p.age, p.address, point
+    )
+  }
+}
+
+// Or even worst... 🤢
+
+class PersonRepoSpring {
+
+  @Inject
+  private DB instance;
+
+  ...
+}
 ```
 ---
+# (Synchronous) Imperative OO
+
+```java
+// I used to write things like that...
+
+class GoogleService {
+
+  private SyncHttpClient httpClient;
+
+  public GoogleService(SyncHttpClient httpClient) {
+    this.httpClient = httpClient;
+  }
+
+  public GpsPoint geocode(String address) {
+    String res =
+      httpClient
+        .get("https://api.google.com/geocode/address")
+        .body("{ \"address\": \"" + address + "\" }")
+        .execute();
+
+    parse(res);
+  }
+}
+```
+---
+# (Synchronous) Imperative OO
+
+```java
+class Server extends FrameworkMagic {
+
+  private GoogleService geocoder;
+  private PersonRepo    repo;
+
+  /**
+    * Accepted JSON requests:
+    *
+    * { "name": "Jules", "age": 30, "address": "Sydney, Australia" }
+    */
+  @Put("/person")
+  public HttpResponse createPerson(@Body Person person) {
+    // TODO: Your mission, if you accept, is to code this method.
+  }
+
+}
+```
+---
+# (Synchronous) Imperative OO
+
+```java
+@Put("/person")
+public HttpResponse createPerson(@Body Person person) {
+
+  GpsPoint point = geocoder.geocode(person.address);
+
+  repo.savePerson(person, point);
+
+  return HttpResponse.Created("Done 👍");
+}
+```
+---
+# (Synchronous) Imperative OO
+
+```java
+@Put("/person")
+public HttpResponse createPerson(@Body Person person) {
+
+  GpsPoint point = geocoder.geocode(person.address);
+
+  repo.savePerson(person, point);
+
+  return HttpResponse.Created("Done 👍");
+}
+```
+
+<br />
+
+.bold[Your nice ignorant boss 🤴 :]  Nice work. Here's your 💵
+
+.bold[Me (your CTO) 👨‍🏫 :] You're fired. You waste our money.
+---
+# (Synchronous) Imperative OO
+
+```java
+@Put("/person")
+public HttpResponse createPerson(@Body Person person) {
+
+  GpsPoint point = geocoder.geocode(person.address);
+
+  repo.savePerson(person, point);
+
+  return HttpResponse.Created("Done 👍");
+}
+```
+
+<br />
+
+Problems in this code:
+  - No error handling
+  - Synchronous
+  - Uncontrolled side effects
+  - mutable
+---
+# (Synchronous) Imperative OO
+
+```java
+@Put("/person")
+public HttpResponse createPerson(@Body Person person) {
+
+  GpsPoint point = geocoder.geocode(person.address);
+
+  repo.savePerson(person, point);
+
+  return HttpResponse.Created("Done 👍");
+}
+```
+
+<br />
+
+.bold[
+Let's improve that piece of code!
+]
+
+We'll make it asynchronous and we'll handle errors in the same time
+
+Thanks to ???
+---
+# [A]synchronous, [non-]blocking ? 🤔
+
+<br />
+
+.center[
+|                     | Synchronous                          | Asynchronous                  |
+|---------------------|--------------------------------------|-------------------------------|
+| .bold[blocking]     | Waste LOTS OF CPU resources          | Unsafe, waste resources       |
+| .bold[non-blocking] | Non sensical                         | Holy graal 🏆                 |
+]
+
+<br />
+
+[Latency numbers every programmer should know](https://gist.github.com/guizmaii/6395ad8abf1b1718f4a3128fec81f7ce)
+---
+
 # Conclusion
 
 
@@ -139,11 +335,11 @@ Code and slides at `guizmaii/LilleFP` on GitHub
 
 
 
- </textarea>
-    <script src="remark-latest.min.js">
-    </script>
-    <script>
-      var slideshow = remark.create();
-    </script>
-  </body>
+</textarea>
+<script src="remark-latest.min.js">
+</script>
+<script>
+  const slideshow = remark.create();
+</script>
+</body>
 </html>
