@@ -28,6 +28,7 @@
         margin-left: 5%;
         margin-right: 5%;
       }
+      .small { font-size: small; }
     </style>
 </head>
 <body>
@@ -60,7 +61,7 @@ Jules Ivanic • `@guizmaii`
 
  - Mostly Scala/FP developer today
 
- - Ex-CTO @ Colisweb
+ - Ex-CTO @ Colisweb .small[(Ils recrutent: https://www.welcometothejungle.co/fr/companies/colisweb)]
 
  - Passionate surfer since I'm 11. Leaving to Australia in June 🌊🏄
 
@@ -447,538 +448,179 @@ Now, it's equivalent to the Java code.
 # Impure FP
 
 ```scala
-scala> case class Person(name: String, age: Int, address: String)
-defined class Person
+case class Person(name: String, age: Int, address: String)
 
-scala> object Person {
-     | 
-     |   // bad
-     |   def apply(name: String, ...): Person =
-<console>:5: error: identifier expected but '.' found.
-         def apply(name: String, ...): Person =
-                                 ^
+object Person {
 
-scala>     if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-                          ^
+  // bad
+  def apply(name: String, ...): Person =
+    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+    else                      new Person(name, age, address)
 
-scala>     else                      new Person(name, age, address)
-<console>:2: error: illegal start of definition
-           else                      new Person(name, age, address)
-           ^
-
-scala> }
-<console>:2: error: eof expected but '}' found.
-       }
-       ^
+}
 ```
 ---
 # Impure FP
 
 ```scala
-scala> case class Person(name: String, age: Int, address: String)
-defined class Person
+case class Person(name: String, age: Int, address: String)
 
-scala> object Person {
-     | 
-     |   // bad
-     |   def apply(name: String, ...): Person =
-<console>:5: error: identifier expected but '.' found.
-         def apply(name: String, ...): Person =
-                                 ^
+object Person {
 
-scala>     if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-                          ^
+  // bad
+  def apply(name: String, ...): Person =
+    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+    else                      new Person(name, age, address)
 
-scala>     else                      new Person(name, age, address)
-<console>:2: error: illegal start of definition
-           else                      new Person(name, age, address)
-           ^
+  // better
+  def apply2(name: String, ...): Option[Person] =
+    if (age < 0 || age > 120) None
+    else                      Some(new Person(name, age, address))
 
-scala>   // better
-     |   def apply2(name: String, ...): Option[Person] =
-<console>:3: error: identifier expected but '.' found.
-         def apply2(name: String, ...): Option[Person] =
-                                  ^
-
-scala>     if (age < 0 || age > 120) None
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) None
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) None
-                          ^
-
-scala>     else                      Some(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                      Some(new Person(name, age, address))
-           ^
-
-scala> }
-<console>:2: error: eof expected but '}' found.
-       }
-       ^
+}
 ```
 ---
 # Impure FP
 
 ```scala
-scala> case class Person(name: String, age: Int, address: String)
-defined class Person
+case class Person(name: String, age: Int, address: String)
 
-scala> object Person {
-     | 
-     |   // bad
-     |   def apply(name: String, ...): Person =
-<console>:5: error: identifier expected but '.' found.
-         def apply(name: String, ...): Person =
-                                 ^
+object Person {
 
-scala>     if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-                          ^
+  // bad
+  def apply(name: String, ...): Person =
+    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+    else                      new Person(name, age, address)
 
-scala>     else                      new Person(name, age, address)
-<console>:2: error: illegal start of definition
-           else                      new Person(name, age, address)
-           ^
+  // better
+  def apply2(name: String, ...): Option[Person] =
+    if (age < 0 || age > 120) None
+    else                      Some(new Person(name, age, address))
 
-scala>   // better
-     |   def apply2(name: String, ...): Option[Person] =
-<console>:3: error: identifier expected but '.' found.
-         def apply2(name: String, ...): Option[Person] =
-                                  ^
+  // Why not
+  def apply3(name: String, ...): Either[RuntimeException, Person] =
+    if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+    else                      Right(new Person(name, age, address))
 
-scala>     if (age < 0 || age > 120) None
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) None
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) None
-                          ^
-
-scala>     else                      Some(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                      Some(new Person(name, age, address))
-           ^
-
-scala>   // Why not
-     |   def apply3(name: String, ...): Either[RuntimeException, Person] =
-<console>:3: error: identifier expected but '.' found.
-         def apply3(name: String, ...): Either[RuntimeException, Person] =
-                                  ^
-
-scala>     if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
-                          ^
-
-scala>     else                      Right(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                      Right(new Person(name, age, address))
-           ^
-
-scala> }
-<console>:2: error: eof expected but '}' found.
-       }
-       ^
+}
 ```
 ---
 # Impure FP
 
 ```scala
-scala> case class Person(name: String, age: Int, address: String)
-defined class Person
+case class Person(name: String, age: Int, address: String)
 
-scala> object Person {
-     | 
-     |   // bad
-     |   def apply(name: String, ...): Person =
-<console>:5: error: identifier expected but '.' found.
-         def apply(name: String, ...): Person =
-                                 ^
+object Person {
 
-scala>     if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-                          ^
+  // bad
+  def apply(name: String, ...): Person =
+    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+    else                      new Person(name, age, address)
 
-scala>     else                      new Person(name, age, address)
-<console>:2: error: illegal start of definition
-           else                      new Person(name, age, address)
-           ^
+  // better
+  def apply2(name: String, ...): Option[Person] =
+    if (age < 0 || age > 120) None
+    else                      Some(new Person(name, age, address))
 
-scala>   // better
-     |   def apply2(name: String, ...): Option[Person] =
-<console>:3: error: identifier expected but '.' found.
-         def apply2(name: String, ...): Option[Person] =
-                                  ^
+  // Why not
+  def apply3(name: String, ...): Either[RuntimeException, Person] =
+    if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+    else                      Right(new Person(name, age, address))
 
-scala>     if (age < 0 || age > 120) None
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) None
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) None
-                          ^
+  // Even better
+  case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
 
-scala>     else                      Some(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                      Some(new Person(name, age, address))
-           ^
+  def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
+    if (age < 0 || age > 120) Left(InvalidPersonAge(age))
+    else                      Right(new Person(name, age, address))
 
-scala>   // Why not
-     |   def apply3(name: String, ...): Either[RuntimeException, Person] =
-<console>:3: error: identifier expected but '.' found.
-         def apply3(name: String, ...): Either[RuntimeException, Person] =
-                                  ^
-
-scala>     if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
-               ^
-<console>:13: error: not found: value age
-           if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
-                          ^
-
-scala>     else                      Right(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                      Right(new Person(name, age, address))
-           ^
-
-scala>   // Even better
-     |   case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
-defined class InvalidPersonAge
-
-scala>   def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
-<console>:2: error: identifier expected but '.' found.
-         def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
-                                  ^
-
-scala>     if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-               ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-                          ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-                                                           ^
-
-scala>     else                      Right(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                      Right(new Person(name, age, address))
-           ^
-
-scala> }
-<console>:2: error: eof expected but '}' found.
-       }
-       ^
+}
 ```
 ---
 # Impure FP
 
 ```scala
-scala> case class Person(name: String, age: Int, address: String)
-defined class Person
+case class Person(name: String, age: Int, address: String)
 
-scala> object Person {
-     | 
-     |   // Even better
-     |   case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
-     | 
-     |   def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
-<console>:7: error: identifier expected but '.' found.
-         def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
-                                  ^
+object Person {
 
-scala>     if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-               ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-                          ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-                                                           ^
+  // Even better
+  case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
 
-scala>     else                      Right(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                      Right(new Person(name, age, address))
-           ^
+  def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
+    if (age < 0 || age > 120) Left(InvalidPersonAge(age))
+    else                      Right(new Person(name, age, address))
 
-scala> }
-<console>:2: error: eof expected but '}' found.
-       }
-       ^
+}
 ```
 ---
 # Impure FP
 
 ```scala
-scala> case class Person(name: String, age: Int, address: String)
-defined class Person
+case class Person(name: String, age: Int, address: String)
 
-scala> object Person {
-     | 
-     |   // Even better
-     |   case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
-     | 
-     |   def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
-<console>:7: error: identifier expected but '.' found.
-         def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
-                                  ^
+object Person {
 
-scala>     if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-               ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-                          ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
-                                                           ^
+  // Even better
+  case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
 
-scala>     else                      Right(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                      Right(new Person(name, age, address))
-           ^
+  def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
+    if (age < 0 || age > 120) Left(InvalidPersonAge(age))
+    else                      Right(new Person(name, age, address))
 
-scala>   // Holly Graal 🏆 (PCE == PersonCreationException)
-     |   sealed trait `PCE`(message: String) extends RuntimeException(message)
-<console>:3: error: traits or objects may not have parameters
-         sealed trait `PCE`(message: String) extends RuntimeException(message)
-                           ^
+  // Holly Graal 🏆 (PCE == PersonCreationException)
+  sealed trait `PCE`(message: String) extends RuntimeException(message)
+  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  ...
 
-scala>   case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-<console>:12: error: not found: type PCE
-         case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-                                                               ^
-<console>:12: error: no arguments allowed for nullary constructor Object: ()Object
-         case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-                                                                   ^
+  def apply🏆(name: String, ...): Either[`PCE`, Person] =
+    if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
+    else if (name == "Harry Potter") Left(TooDumbNameException(name))
+    ...
+    else                             Right(new Person(name, age, address))
 
-scala>   case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-<console>:12: error: not found: type PCE
-         case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-                                                               ^
-<console>:12: error: no arguments allowed for nullary constructor Object: ()Object
-         case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-                                                                   ^
-
-scala>   ...
-<console>:2: error: illegal start of definition
-         ...
-         ^
-
-scala>   def apply🏆(name: String, ...): Either[`PCE`, Person] =
-<console>:2: error: illegal character '\ud83c'
-         def apply🏆(name: String, ...): Either[`PCE`, Person] =
-                  ^
-<console>:2: error: illegal character '\udfc6'
-         def apply🏆(name: String, ...): Either[`PCE`, Person] =
-                   ^
-
-scala>     if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-               ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-                          ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-                                                                  ^
-
-scala>     else if (name == "Harry Potter") Left(TooDumbNameException(name))
-<console>:2: error: illegal start of definition
-           else if (name == "Harry Potter") Left(TooDumbNameException(name))
-           ^
-
-scala>     ...
-<console>:2: error: illegal start of definition
-           ...
-           ^
-
-scala>     else                             Right(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                             Right(new Person(name, age, address))
-           ^
-
-scala> }
-<console>:2: error: eof expected but '}' found.
-       }
-       ^
+}
 ```
 ---
 # Impure FP
 
 ```scala
-scala> case class Person(name: String, age: Int, address: String)
-defined class Person
+case class Person(name: String, age: Int, address: String)
 
-scala> object Person {
-     |   // Holly Graal 🏆 (PCE == PersonCreationException)
-     |   sealed trait `PCE`(message: String) extends RuntimeException(message)
-<console>:4: error: traits or objects may not have parameters
-         sealed trait `PCE`(message: String) extends RuntimeException(message)
-                           ^
+object Person {
+  // Holly Graal 🏆 (PCE == PersonCreationException)
+  sealed trait `PCE`(message: String) extends RuntimeException(message)
+  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  ...
 
-scala>   case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-<console>:12: error: not found: type PCE
-         case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-                                                               ^
-<console>:12: error: no arguments allowed for nullary constructor Object: ()Object
-         case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-                                                                   ^
-
-scala>   case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-<console>:12: error: not found: type PCE
-         case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-                                                               ^
-<console>:12: error: no arguments allowed for nullary constructor Object: ()Object
-         case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-                                                                   ^
-
-scala>   ...
-<console>:2: error: illegal start of definition
-         ...
-         ^
-
-scala>   def apply🏆(name: String, ...): Either[`PCE`, Person] =
-<console>:2: error: illegal character '\ud83c'
-         def apply🏆(name: String, ...): Either[`PCE`, Person] =
-                  ^
-<console>:2: error: illegal character '\udfc6'
-         def apply🏆(name: String, ...): Either[`PCE`, Person] =
-                   ^
-
-scala>     if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-               ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-                          ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-                                                                  ^
-
-scala>     else if (name == "Harry Potter") Left(TooDumbNameException(name))
-<console>:2: error: illegal start of definition
-           else if (name == "Harry Potter") Left(TooDumbNameException(name))
-           ^
-
-scala>     ...
-<console>:2: error: illegal start of definition
-           ...
-           ^
-
-scala>     else                             Right(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                             Right(new Person(name, age, address))
-           ^
-
-scala> }
-<console>:2: error: eof expected but '}' found.
-       }
-       ^
+  def apply🏆(name: String, ...): Either[`PCE`, Person] =
+    if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
+    else if (name == "Harry Potter") Left(TooDumbNameException(name))
+    ...
+    else                             Right(new Person(name, age, address))
+}
 ```
 ---
 # Impure FP
 
 ```scala
-scala> case class Person(name: String, age: Int, address: String)
-defined class Person
+case class Person(name: String, age: Int, address: String)
 
-scala> object Person {
-     |   // Holly Graal 🏆 (PCE == PersonCreationException)
-     |   sealed trait `PCE`(message: String) extends RuntimeException(message)
-<console>:4: error: traits or objects may not have parameters
-         sealed trait `PCE`(message: String) extends RuntimeException(message)
-                           ^
+object Person {
+  // Holly Graal 🏆 (PCE == PersonCreationException)
+  sealed trait `PCE`(message: String) extends RuntimeException(message)
+  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  ...
 
-scala>   case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-<console>:12: error: not found: type PCE
-         case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-                                                               ^
-<console>:12: error: no arguments allowed for nullary constructor Object: ()Object
-         case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-                                                                   ^
-
-scala>   case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-<console>:12: error: not found: type PCE
-         case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-                                                               ^
-<console>:12: error: no arguments allowed for nullary constructor Object: ()Object
-         case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
-                                                                   ^
-
-scala>   ...
-<console>:2: error: illegal start of definition
-         ...
-         ^
-
-scala>   def apply🏆(name: String, ...): Either[`PCE`, Person] =
-<console>:2: error: illegal character '\ud83c'
-         def apply🏆(name: String, ...): Either[`PCE`, Person] =
-                  ^
-<console>:2: error: illegal character '\udfc6'
-         def apply🏆(name: String, ...): Either[`PCE`, Person] =
-                   ^
-
-scala>     if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-               ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-                          ^
-<console>:15: error: not found: value age
-           if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
-                                                                  ^
-
-scala>     else if (name == "Harry Potter") Left(TooDumbNameException(name))
-<console>:2: error: illegal start of definition
-           else if (name == "Harry Potter") Left(TooDumbNameException(name))
-           ^
-
-scala>     ...
-<console>:2: error: illegal start of definition
-           ...
-           ^
-
-scala>     else                             Right(new Person(name, age, address))
-<console>:2: error: illegal start of definition
-           else                             Right(new Person(name, age, address))
-           ^
-
-scala> }
-<console>:2: error: eof expected but '}' found.
-       }
-       ^
+  def apply🏆(name: String, ...): Either[`PCE`, Person] =
+    if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
+    else if (name == "Harry Potter") Left(TooDumbNameException(name))
+    ...
+    else                             Right(new Person(name, age, address))
+}
 ```
 
 What's the problem with throwing exceptions ?
