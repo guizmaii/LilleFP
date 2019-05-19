@@ -31,8 +31,7 @@
     </style>
 </head>
 <body>
-<textarea id="source">
-
+<div id="source">
 
 
 class: center, middle
@@ -182,7 +181,7 @@ class PersonRepoSpring {
 
 class GoogleService {
 
-  private SyncHttpClient httpClient;
+  private final SyncHttpClient httpClient;
 
   public GoogleService(SyncHttpClient httpClient) {
     this.httpClient = httpClient;
@@ -205,8 +204,8 @@ class GoogleService {
 ```java
 class Server extends FrameworkMagic {
 
-  private GoogleService geocoder;
-  private PersonRepo    repo;
+  private final GoogleService geocoder;
+  private final PersonRepo    repo;
 
   /**
     * Accepted JSON requests:
@@ -316,7 +315,392 @@ Thanks to ???
 
 [Latency numbers every programmer should know](https://gist.github.com/guizmaii/6395ad8abf1b1718f4a3128fec81f7ce)
 ---
+# Impure FP
 
+First, let's rewrite the `Person` class ...
+
+```java
+class Person {
+
+  private String name;
+  private Int age;
+  private String address;
+
+  public Person(String name, Int age, String address) {
+
+    if (age < 0 || age > 120) {
+      throw new RuntimeException("age is invalid");
+    }
+
+    this.name = name; this.age = age; this.address = address;
+  }
+
+  public String getName {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  ...
+}
+```
+---
+# Impure FP
+
+... in Scala
+
+```scala
+case class Person(name: String, age: Int, address: String)
+```
+---
+# Impure FP
+
+... in .bold[Scala]
+
+```scala
+case class Person(name: String, age: Int, address: String)
+```
+
+<br />
+
+.bold[BOOOMM] 🤩
+---
+# Impure FP
+
+... in .bold[Scala]
+
+```scala
+case class Person(name: String, age: Int, address: String)
+```
+
+<br />
+
+.bold[BOOOMM] 🤩
+
+But why choose Scala ? Why not stay with Java ?
+
+And also, is this code really equivalent to the previous Java one ?
+---
+# Impure FP
+
+```scala
+case class Person(name: String, age: Int, address: String)
+
+object Person {
+
+  def apply(name: String, age: Int, address: String): Person =
+    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+    else                      new Person(name, age, address)
+
+}
+```
+
+<br />
+
+Now, it's equivalent to the Java code.
+---
+# Impure FP
+
+```scala
+case class Person(name: String, age: Int, address: String)
+
+object Person {
+
+  def apply(name: String, age: Int, address: String): Person =
+    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+    else                      new Person(name, age, address)
+
+}
+```
+
+<br />
+
+Now, it's equivalent to the Java code.
+
+.bold[Except that it's immutable] 🤩
+---
+# Impure FP
+
+```scala
+case class Person(name: String, age: Int, address: String)
+
+object Person {
+
+  def apply(name: String, age: Int, address: String): Person =
+    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+    else                      new Person(name, age, address)
+
+}
+```
+
+<br />
+
+Now, it's equivalent to the Java code.
+
+.bold[Except that it's immutable] 🤩
+
+
+👨‍🏫: But with this code, you're still fired!
+---
+# Impure FP
+
+```scala
+scala> case class Person(name: String, age: Int, address: String)
+defined class Person
+
+scala> object Person {
+     | 
+     |   // bad
+     |   def apply(name: String, ...): Person =
+<console>:5: error: identifier expected but '.' found.
+         def apply(name: String, ...): Person =
+                                 ^
+
+scala>     if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+                          ^
+
+scala>     else                      new Person(name, age, address)
+<console>:2: error: illegal start of definition
+           else                      new Person(name, age, address)
+           ^
+
+scala> }
+<console>:2: error: eof expected but '}' found.
+       }
+       ^
+```
+---
+# Impure FP
+
+```scala
+scala> case class Person(name: String, age: Int, address: String)
+defined class Person
+
+scala> object Person {
+     | 
+     |   // bad
+     |   def apply(name: String, ...): Person =
+<console>:5: error: identifier expected but '.' found.
+         def apply(name: String, ...): Person =
+                                 ^
+
+scala>     if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+                          ^
+
+scala>     else                      new Person(name, age, address)
+<console>:2: error: illegal start of definition
+           else                      new Person(name, age, address)
+           ^
+
+scala>   // better
+     |   def apply2(name: String, ...): Option[Person] =
+<console>:3: error: identifier expected but '.' found.
+         def apply2(name: String, ...): Option[Person] =
+                                  ^
+
+scala>     if (age < 0 || age > 120) None
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) None
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) None
+                          ^
+
+scala>     else                      Some(new Person(name, age, address))
+<console>:2: error: illegal start of definition
+           else                      Some(new Person(name, age, address))
+           ^
+
+scala> }
+<console>:2: error: eof expected but '}' found.
+       }
+       ^
+```
+---
+# Impure FP
+
+```scala
+scala> case class Person(name: String, age: Int, address: String)
+defined class Person
+
+scala> object Person {
+     | 
+     |   // bad
+     |   def apply(name: String, ...): Person =
+<console>:5: error: identifier expected but '.' found.
+         def apply(name: String, ...): Person =
+                                 ^
+
+scala>     if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+                          ^
+
+scala>     else                      new Person(name, age, address)
+<console>:2: error: illegal start of definition
+           else                      new Person(name, age, address)
+           ^
+
+scala>   // better
+     |   def apply2(name: String, ...): Option[Person] =
+<console>:3: error: identifier expected but '.' found.
+         def apply2(name: String, ...): Option[Person] =
+                                  ^
+
+scala>     if (age < 0 || age > 120) None
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) None
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) None
+                          ^
+
+scala>     else                      Some(new Person(name, age, address))
+<console>:2: error: illegal start of definition
+           else                      Some(new Person(name, age, address))
+           ^
+
+scala>   // Why not
+     |   def apply3(name: String, ...): Either[RuntimeException, Person] =
+<console>:3: error: identifier expected but '.' found.
+         def apply3(name: String, ...): Either[RuntimeException, Person] =
+                                  ^
+
+scala>     if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+                          ^
+
+scala>     else                      Right(new Person(name, age, address))
+<console>:2: error: illegal start of definition
+           else                      Right(new Person(name, age, address))
+           ^
+
+scala> }
+<console>:2: error: eof expected but '}' found.
+       }
+       ^
+```
+---
+# Impure FP
+
+```scala
+scala> case class Person(name: String, age: Int, address: String)
+defined class Person
+
+scala> object Person {
+     | 
+     |   // bad
+     |   def apply(name: String, ...): Person =
+<console>:5: error: identifier expected but '.' found.
+         def apply(name: String, ...): Person =
+                                 ^
+
+scala>     if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+                          ^
+
+scala>     else                      new Person(name, age, address)
+<console>:2: error: illegal start of definition
+           else                      new Person(name, age, address)
+           ^
+
+scala>   // better
+     |   def apply2(name: String, ...): Option[Person] =
+<console>:3: error: identifier expected but '.' found.
+         def apply2(name: String, ...): Option[Person] =
+                                  ^
+
+scala>     if (age < 0 || age > 120) None
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) None
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) None
+                          ^
+
+scala>     else                      Some(new Person(name, age, address))
+<console>:2: error: illegal start of definition
+           else                      Some(new Person(name, age, address))
+           ^
+
+scala>   // Why not
+     |   def apply3(name: String, ...): Either[RuntimeException, Person] =
+<console>:3: error: identifier expected but '.' found.
+         def apply3(name: String, ...): Either[RuntimeException, Person] =
+                                  ^
+
+scala>     if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+               ^
+<console>:13: error: not found: value age
+           if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+                          ^
+
+scala>     else                      Right(new Person(name, age, address))
+<console>:2: error: illegal start of definition
+           else                      Right(new Person(name, age, address))
+           ^
+
+scala>   // Even better
+     |   case class InvalidPersonAge(invalidAge: Int)
+defined class InvalidPersonAge
+
+scala>     extends RuntimeException(s"age is invalid: $invalidAge")
+<console>:2: error: illegal start of definition
+           extends RuntimeException(s"age is invalid: $invalidAge")
+           ^
+
+scala>   def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
+<console>:2: error: identifier expected but '.' found.
+         def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
+                                  ^
+
+scala>     if (age < 0 || age > 120) Left(InvalidPersonAge(age))
+<console>:15: error: not found: value age
+           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
+               ^
+<console>:15: error: not found: value age
+           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
+                          ^
+<console>:15: error: not found: value age
+           if (age < 0 || age > 120) Left(InvalidPersonAge(age))
+                                                           ^
+
+scala>     else                      Right(new Person(name, age, address))
+<console>:2: error: illegal start of definition
+           else                      Right(new Person(name, age, address))
+           ^
+
+scala> }
+<console>:2: error: eof expected but '}' found.
+       }
+       ^
+```
+---
 # Conclusion
 
 
@@ -332,14 +716,17 @@ Code and slides at `guizmaii/LilleFP` on GitHub
 ## Questions?
 
 
-
-
-
-</textarea>
+</div>
 <script src="remark-latest.min.js">
 </script>
 <script>
-  const slideshow = remark.create();
+  const slideshow = remark.create({
+    ratio: "4:3", // 16:9
+
+    highlightStyle: "github",
+    highlightLines: true,
+    highlightSpans: true,
+  });
 </script>
 </body>
 </html>
