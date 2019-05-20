@@ -977,7 +977,6 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
       .flatMap(gpsPoint => repo.savePerson(person, gpsPoint))
 
   ...
-}
 
 }
 ```
@@ -1102,7 +1101,7 @@ It means that functions are first-class values:
 ```scala
 val f: `String => Int` = (s: String) => s.size      // a function is a Type, just like String, Int, Person, etc.
 
-def map[A, B](a: F[A], `f: A => B`): F[B]           // A function can take a function in parameter
+def map[F[_], A, B](a: F[A], `f: A => B`): F[B]     // A function can take a function in parameter
 
 def parse[A, B](value: String): `(A, String) => B`  // A function can return a function
 ```
@@ -1485,6 +1484,10 @@ scala> twoEffects
 Complete explanation of the problem:
 
 https://stackoverflow.com/questions/27454798/is-future-in-scala-a-monad/27467037#27467037
+---
+# 5. Pure FP
+
+
 ---
 
 # Conclusion
