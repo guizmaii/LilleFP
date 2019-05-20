@@ -1195,6 +1195,149 @@ val r1 = 6
 // So the 'mult' function is not referencially transparent, so it's not pure.
 ```
 ---
+# 4. Impure FP
+
+.bold[Now, let's get back to our primary example.]
+---
+# 4. Impure FP
+
+.bold[Now, let's get back to our primary example:]
+
+.bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+
+
+
+```scala
+import scala.concurrent.{ExecutionContext, Future}
+
+class PersonRepo(dbInstance: AsyncNIODB) { // NIO == Non-blocking IO, in JVM slang
+
+  def savePerson(p: Person, point: GpsPoint)(implicit ex: ExecutionContext): Future[Unit] =
+    dbInstance.query(
+      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+      p.name, p.age, p.address, point
+    )
+
+}
+```
+---
+# 4. Impure FP
+
+.bold[Now, let's get back to our primary example:]
+
+.bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+
+
+
+```scala
+import scala.concurrent.{ExecutionContext, Future}
+
+class PersonRepo(dbInstance: AsyncNIODB) { // NIO == Non-blocking IO, in JVM slang
+
+  def savePerson(p: Person, point: GpsPoint)(implicit ex: ExecutionContext): Future[Unit] =
+    dbInstance.query(
+      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+      p.name, p.age, p.address, point
+    )
+
+}
+```
+
+.bold[Why is this code not pure ?]
+---
+# 4. Impure FP
+
+.bold[Now, let's get back to our primary example:]
+
+.bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+
+
+
+```scala
+import scala.concurrent.{ExecutionContext, Future}
+
+class PersonRepo(dbInstance: AsyncNIODB) { // NIO == Non-blocking IO, in JVM slang
+
+  def savePerson(p: Person, point: GpsPoint)(implicit ex: ExecutionContext): `Future[Unit]` =
+    dbInstance.query(
+      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+      p.name, p.age, p.address, point
+    )
+
+}
+```
+
+.bold[Why is this code not pure ?]
+
+The problem comes from the `Future`!
+---
+# 4. Impure FP
+
+.bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
+
+Let's explain it with a simpler example:
+
+
+
+```scala
+// This:
+
+def twoEffects = ( Future { println("hello") }, Future { println("hello") } )
+
+scala> twoEffects
+hello
+hello
+
+scala> twoEffects
+hello
+hello
+```
+---
+# 4. Impure FP
+
+.bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
+
+Let's explain it with a simpler example:
+
+
+
+```scala
+// This:
+
+def twoEffects = ( Future { println("hello") }, Future { println("hello") } )
+
+scala> twoEffects
+hello
+hello
+
+scala> twoEffects
+hello
+hello
+
+// is not equivalent to this while it should be:
+
+lazy val anEffect = Future { println("hello") }
+
+def twoEffects = (anEffect, anEffect)
+
+scala> twoEffects
+hello
+
+scala> twoEffects
+```
+---
+# 4. Impure FP
+
+.bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
+
+Complete explanation of the problem:
+
+https://stackoverflow.com/questions/27454798/is-future-in-scala-a-monad/27467037#27467037
+---
+
 # Conclusion
 
 
