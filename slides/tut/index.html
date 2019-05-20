@@ -91,6 +91,10 @@ class: center, middle
 # 1. Motivation
 
 ---
+# 1. Motivation
+
+TODO.
+---
 class: center, middle
 
 # 2. Disclaimer
@@ -114,7 +118,7 @@ Je peux vous montrer, vous expliquer mais la compréhension de ce que je vous mo
 
 Apprendre demande du travail personnel. Vous n'apprenez pas juste en regardant un talk.
 
-Sur des sujets non triviaux, il faut que vous gagner votre propre "intuition".
+Sur des sujets non triviaux, il faut que vous trouviez votre propre "intuition".
 C'est cette intuition qui vous permet de comprendre les choses complexes.
 
 Je peux vous partager mon intuition, plus quelques autres si j'en connais d'autres.
@@ -213,7 +217,7 @@ class GoogleService {
         .body("{ \"address\": \"" + address + "\" }")
         .execute();
 
-    parse(res);
+    return parse(res);
   }
 }
 ```
@@ -672,6 +676,228 @@ class: center, middle
 ## With imperative programing, it's impossible to produce a safe and deterministic program in a finite time
 
 .right.small[Jules Ivanic]
+---
+# 4. Impure FP
+
+```tut:nofail:silent
+case class Person(name: String, age: Int, address: String)
+
+object Person {
+  // Holy Grail 🏆 (PCE == PersonCreationException)
+  sealed trait `PCE`(message: String) extends RuntimeException(message)
+  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  ...
+
+  def apply🏆(name: String, ...): Either[`PCE`, Person] =
+    if (age < 0 || age > 120)        Left(InvalidPersonAge(age))
+    else if (name == "Harry Potter") Left(TooDumbNameException(name))
+    ...
+    else                             Right(new Person(name, age, address))
+}
+```
+
+<br />
+
+Now that we have our `Person` constructor correctly implemented,
+let's continue our refactoring by fixing the `PersonRepo` code.
+---
+# 4. Impure FP
+
+Reminder: Here's the Java code we'll rewrite ...
+
+```java
+
+
+class PersonRepo {
+
+  private DB dbInstance;
+
+  public PersonRepo(DB dbInstance) {
+    this.dbInstance = dbInstance;
+  }
+
+  public void savePerson(Person p, GpsPoint point) {
+    dbInstance.query(
+      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+      p.name, p.age, p.address, point
+    )
+  }
+}
+```
+---
+# 4. Impure FP
+
+... in Scala
+
+```tut:invisible
+import com.guizmaii.talk.lillefp.Classes._
+```
+
+```tut:silent
+
+
+class PersonRepo(dbInstance: DB) {
+
+  def savePerson(p: Person, point: GpsPoint): Unit =
+    dbInstance.query(
+      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+      p.name, p.age, p.address, point
+    )
+
+}
+```
+---
+# 4. Impure FP
+
+... in .bold[(blocking synchronous impure FP)] Scala
+
+```tut:invisible
+import com.guizmaii.talk.lillefp.Classes._
+```
+
+```tut:nofail:silent
+import scala.util.Try
+
+class PersonRepo(dbInstance: DB) {
+
+  def savePerson(p: Person, point: GpsPoint): `Try[Unit]` =
+    `Try {`
+      dbInstance.query(
+        "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+        p.name, p.age, p.address, point
+      )
+    `}`
+
+}
+```
+---
+# 4. Impure FP
+
+... in .bold[(blocking .red[a]synchronous impure FP)] Scala
+
+```tut:invisible
+import com.guizmaii.talk.lillefp.Classes._
+```
+
+```tut:nofail:silent
+import scala.concurrent.{ExecutionContext, Future, blocking}
+
+class PersonRepo(dbInstance: DB) {
+
+  def savePerson(p: Person, point: GpsPoint)`(implicit ex: ExecutionContext)`: `Future[Unit]` =
+    `Future {`
+      blocking {
+        dbInstance.query(
+          "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+          p.name, p.age, p.address, point
+        )
+      }
+    `}`
+
+}
+```
+---
+# 4. Impure FP
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+```tut:invisible
+import com.guizmaii.talk.lillefp.Classes._
+```
+
+```tut:nofail:silent
+import scala.concurrent.{ExecutionContext, Future}
+
+class PersonRepo(dbInstance: `AsyncNIODB`) { // NIO == Non-blocking IO, in JVM slang
+
+  def savePerson(p: Person, point: GpsPoint)(implicit ex: ExecutionContext): `Future[Unit]` =
+    dbInstance.query(
+      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+      p.name, p.age, p.address, point
+    )
+
+}
+```
+---
+# 4. Impure FP
+
+Now, let's do quickly the same thing for the `GoogleService`.
+
+Reminder: Here's the Java code we'll rewrite ...
+
+```java
+
+
+class GoogleService {
+
+  private final SyncHttpClient httpClient;
+
+  public GoogleService(SyncHttpClient httpClient) {
+    this.httpClient = httpClient;
+  }
+
+  public GpsPoint geocode(String address) {
+    String res =
+      httpClient
+        .get("https://api.google.com/geocode/address")
+        .body("{ \"address\": \"" + address + "\" }")
+        .execute();
+
+    return parse(res);
+  }
+}
+```
+---
+# 4. Impure FP
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+<br />
+
+```tut:invisible
+import com.guizmaii.talk.lillefp.Classes._
+```
+
+```tut:nofail:silent
+import scala.concurrent.{ExecutionContext, Future}
+
+class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking IO, in JVM slang
+
+  def geocode(address: String)(implicit ex: ExecutionContext): `Future[GpsPoint]` =
+    httpClient
+      .get("https://api.google.com/geocode/address")
+      .body("{ \"address\": \"" + address + "\" }")
+      .execute()
+      `.map(res: String => parse(res))`
+
+}
+```
+---
+# 4. Impure FP
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+<br />
+
+```tut:invisible
+import com.guizmaii.talk.lillefp.Classes._
+```
+
+```tut:nofail:silent
+import scala.concurrent.{ExecutionContext, Future}
+
+class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking IO, in JVM slang
+
+  def geocode(address: String)(implicit ex: ExecutionContext): `Future[GpsPoint]` =
+    httpClient
+      .get("https://api.google.com/geocode/address")
+      .body("{ \"address\": \"" + address + "\" }")
+      .execute()
+      `.map(parse)`  // 'parse' signature: String => GpsPoint
+
+}
+```
 ---
 # Conclusion
 

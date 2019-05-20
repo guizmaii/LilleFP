@@ -2,5 +2,3 @@
 -Xms1G
 -Xmx4G
 -XX:ReservedCodeCacheSize=512M
--XX:+TieredCompilation
--XX:+UseParallelGC
