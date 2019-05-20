@@ -22,6 +22,7 @@
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', 'Consolas', 'Courier New'; }
       .red { color: red; }
+      .blue { color: blue; }
       .bold { font-weight: bold; }
       .center {
         text-align: center;
@@ -382,7 +383,7 @@ class Person {
 
 ... in Scala
 
-```tut:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 ```
 ---
@@ -390,7 +391,7 @@ case class Person(name: String, age: Int, address: String)
 
 ... in .bold[Scala]
 
-```tut:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 ```
 
@@ -402,7 +403,7 @@ case class Person(name: String, age: Int, address: String)
 
 ... in .bold[Scala]
 
-```tut:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 ```
 
@@ -416,7 +417,7 @@ And also, is this code really equivalent to the previous Java one ?
 ---
 # 4. Impure FP
 
-```tut:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -438,7 +439,7 @@ Now, it's equivalent to the Java code.
 ---
 # 4. Impure FP
 
-```tut:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -462,7 +463,7 @@ Now, it's equivalent to the Java code.
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -503,7 +504,7 @@ class: center, middle
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -518,7 +519,7 @@ object Person {
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -538,7 +539,7 @@ object Person {
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -563,7 +564,7 @@ object Person {
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -595,7 +596,7 @@ object Person {
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -612,7 +613,7 @@ object Person {
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -641,7 +642,7 @@ object Person {
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -661,7 +662,7 @@ object Person {
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -698,7 +699,7 @@ class: center, middle
 ---
 # 4. Impure FP
 
-```tut:nofail:silent
+```scala
 case class Person(name: String, age: Int, address: String)
 
 object Person {
@@ -749,11 +750,7 @@ class PersonRepo {
 
 ... in .bold[(blocking synchronous imperative, a.k.a. "Java++")] Scala
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:silent
+```scala
 
 
 class PersonRepo(dbInstance: DB) {
@@ -771,11 +768,7 @@ class PersonRepo(dbInstance: DB) {
 
 ... in .bold[(blocking synchronous impure FP)] Scala
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:nofail:silent
+```scala
 import scala.util.Try
 
 class PersonRepo(dbInstance: DB) {
@@ -795,11 +788,7 @@ class PersonRepo(dbInstance: DB) {
 
 ... in .bold[(blocking .red[a]synchronous impure FP)] Scala
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:nofail:silent
+```scala
 import scala.concurrent.{ExecutionContext, Future, blocking}
 
 class PersonRepo(dbInstance: DB) {
@@ -821,11 +810,7 @@ class PersonRepo(dbInstance: DB) {
 
 ... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:nofail:silent
+```scala
 import scala.concurrent.{ExecutionContext, Future}
 
 class PersonRepo(dbInstance: `AsyncNIODB`) { // NIO == Non-blocking IO, in JVM slang
@@ -874,11 +859,7 @@ class GoogleService {
 
 ... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:nofail:silent
+```scala
 import scala.concurrent.{ExecutionContext, Future}
 
 class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking IO, in JVM slang
@@ -900,11 +881,7 @@ class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking I
 ... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
 
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:nofail:silent
+```scala
 import scala.concurrent.{ExecutionContext, Future}
 
 class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking IO, in JVM slang
@@ -1058,7 +1035,7 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
     case Left(InvalidPersonAge(age))      => Future.successful(HttpResponse.BadRequest(s"Invalid age: $age"))
     case Left(TooDumbNameException(name)) => Future.successful(HttpResponse.BadRequest(s"Invalid name: $name"))
     ...
-    case Right(person)                    => save(person).fold(_ => internalError)(_ => created)
+    case Right(person)                    => save(person).fold(_ => internalError, _ => created)
   }
 }
 ```
@@ -1096,7 +1073,7 @@ class: center, middle
 
 .bold[What does this mean ?]
 
-It means that functions are first-class values:
+It means that functions are .bold[first-class values]:
 
 ```scala
 val f: `String => Int` = (s: String) => s.size      // a function is a Type, just like String, Int, Person, etc.
@@ -1336,7 +1313,59 @@ val r1 = 6
 // So the 'mult' function is not referencially transparent, so it's not pure.
 ```
 ---
-# 4. Impure FP
+class: center, middle
+
+# Why do we restrict ourself to pure functions ?
+
+---
+# Why do we restrict ourself to pure functions ?
+
+Because this constraint enables a simple and natural mode of .bold[reasoning] about program evaluation called the .bold[substitution model].
+---
+# Why do we restrict ourself to pure functions ?
+
+Because this constraint enables a simple and natural mode of .bold[reasoning] about program evaluation called the .bold[substitution model].
+
+<br />
+
+if we know that .blue[`f(x)`] returns .blue[`y`]<br />
+---
+# Why do we restrict ourself to pure functions ?
+
+Because this constraint enables a simple and natural mode of .bold[reasoning] about program evaluation called the .bold[substitution model].
+
+<br />
+
+if we know that .blue[`f(x)`] returns .blue[`y`]<br />
+then we can replace any .blue[`f(x)`] call by its result, .blue[`y`]
+---
+# Why do we restrict ourself to pure functions ?
+
+Because this constraint enables a simple and natural mode of .bold[reasoning] about program evaluation called the .bold[substitution model].
+
+<br />
+
+if we know that .blue[`f(x)`] returns .blue[`y`]<br />
+then we can replace any .blue[`f(x)`] call by its result, .blue[`y`]<br />
+.bold[without the fear of changing] the behavior of the program
+---
+# Why do we restrict ourself to pure functions ?
+
+Because this constraint enables a simple and natural mode of .bold[reasoning] about program evaluation called the .bold[substitution model].
+
+<br />
+
+if we know that .blue[`f(x)`] returns .blue[`y`]<br />
+then we can replace any .blue[`f(x)`] call by its result, .blue[`y`]<br />
+.bold[without the fear of changing] the behavior of the program
+
+<br />
+
+In other words, pure functions enable .bold[equational reasoning] about programs.
+???
+raisonnement équationnel
+---
+4. Impure FP
 
 .bold[Now, let's get back to our primary example.]
 ---
@@ -1346,11 +1375,7 @@ val r1 = 6
 
 .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:nofail:silent
+```scala
 import scala.concurrent.{ExecutionContext, Future}
 
 class PersonRepo(dbInstance: AsyncNIODB) { // NIO == Non-blocking IO, in JVM slang
@@ -1370,11 +1395,7 @@ class PersonRepo(dbInstance: AsyncNIODB) { // NIO == Non-blocking IO, in JVM sla
 
 .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:nofail:silent
+```scala
 import scala.concurrent.{ExecutionContext, Future}
 
 class PersonRepo(dbInstance: AsyncNIODB) { // NIO == Non-blocking IO, in JVM slang
@@ -1396,11 +1417,7 @@ class PersonRepo(dbInstance: AsyncNIODB) { // NIO == Non-blocking IO, in JVM sla
 
 .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
 
-```tut:invisible
-import com.guizmaii.talk.lillefp.Classes._
-```
-
-```tut:nofail:silent
+```scala
 import scala.concurrent.{ExecutionContext, Future}
 
 class PersonRepo(dbInstance: AsyncNIODB) { // NIO == Non-blocking IO, in JVM slang
@@ -1424,11 +1441,7 @@ The problem comes from the `Future`!
 
 Let's explain it with a simpler example:
 
-```tut:invisible
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits._
-```
-```tut:nofail:silent
+```scala
 // This:
 
 def twoEffects = ( Future { println("hello") }, Future { println("hello") } )
@@ -1448,11 +1461,7 @@ hello
 
 Let's explain it with a simpler example:
 
-```tut:invisible
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits._
-```
-```tut:nofail:silent
+```scala
 // This:
 
 def twoEffects = ( Future { println("hello") }, Future { println("hello") } )
