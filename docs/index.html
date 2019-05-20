@@ -79,7 +79,7 @@ Empty
 
  4. Pure FP
 
- 5. Conlusion
+ 5. Conclusion
 
  6. Questions
 
@@ -320,7 +320,7 @@ Thanks to ???
 |                     | Synchronous                          | Asynchronous                  |
 |---------------------|--------------------------------------|-------------------------------|
 | .bold[blocking]     | Waste LOTS OF CPU resources          | Unsafe, waste resources       |
-| .bold[non-blocking] | Non sensical                         | Holy graal 🏆                 |
+| .bold[non-blocking] | Nonsensical                          | Holy Grail 🏆                 |
 ]
 
 <br />
@@ -596,7 +596,7 @@ object Person {
     if (age < 0 || age > 120) Left(InvalidPersonAge(age))
     else                      Right(new Person(name, age, address))
 
-  // Holly Graal 🏆 (PCE == PersonCreationException)
+  // Holy Grail 🏆 (PCE == PersonCreationException)
   sealed trait `PCE`(message: String) extends RuntimeException(message)
   case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
   case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
@@ -661,7 +661,7 @@ What's the problem with throwing exceptions ?
 # Conclusion
 
 
-FP helps me to write more delcarative code.
+FP helps me to write more declarative code.
 
 Pure FP help me to write more composable code.
 ---
