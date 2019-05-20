@@ -870,9 +870,9 @@ class GoogleService {
 ---
 # 4. Impure FP
 
-... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
-
 <br />
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
 
 ```tut:invisible
 import com.guizmaii.talk.lillefp.Classes._
@@ -895,9 +895,10 @@ class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking I
 ---
 # 4. Impure FP
 
+<br />
+
 ... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
 
-<br />
 
 ```tut:invisible
 import com.guizmaii.talk.lillefp.Classes._
@@ -925,6 +926,144 @@ class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking I
 }
 ```
 ---
+# 4. Impure FP
+
+Finally, let's rewrite our `Service` 'createPerson' method.
+
+Here's the Java version we will rewrite ...
+
+```java
+@Put("/person")
+public HttpResponse createPerson(@Body Person person) {
+
+  GpsPoint point = geocoder.geocode(person.address);
+
+  repo.savePerson(person, point);
+
+  return HttpResponse.Created("Done 👍");
+}
+```
+---
+# 4. Impure FP
+
+<br />
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+```scala
+@Put("/person")
+def createPerson(`Json json`)(implicit ec: ExecutionContext): `Future[HttpResponse]` = {
+
+  ...
+
+}
+```
+---
+# 4. Impure FP
+
+<br />
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+```scala
+@Put("/person")
+def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+
+  // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
+
+  def save(person: Person): Future[Unit] =
+    geocoder
+      .geocode(person.address)
+      .flatMap(gpsPoint => repo.savePerson(person, gpsPoint))
+
+  ...
+}
+
+}
+```
+---
+# 4. Impure FP
+
+<br />
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+```scala
+@Put("/person")
+def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+
+  // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
+
+  def save(person: Person): Future[Unit] =
+    geocoder
+      .geocode(person.address)
+      .flatMap(gpsPoint => repo.savePerson(person, gpsPoint))
+
+  def internalError: HttpResponse = HttpResponse.InternalServerError()
+  def created: HttpResponse       = HttpResponse.Created("Done 👍")
+
+  ...
+}
+```
+---
+# 4. Impure FP
+
+<br />
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+```scala
+@Put("/person")
+def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+
+  // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
+
+  def save(person: Person): Future[Unit] =
+    geocoder
+      .geocode(person.address)
+      .flatMap(gpsPoint => repo.savePerson(person, gpsPoint))
+
+  def internalError: HttpResponse = HttpResponse.InternalServerError()
+  def created: HttpResponse       = HttpResponse.Created("Done 👍")
+
+  val parsed: Either[PCE, Person] = JSON.parse[Person](json)
+
+  ...
+
+}
+```
+---
+# 4. Impure FP
+
+<br />
+
+... in .bold[(.red[non-]blocking .red[a]synchronous impure FP)] Scala
+
+```scala
+@Put("/person")
+def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+
+  // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
+
+  def save(person: Person): Future[Unit] =
+    geocoder
+      .geocode(person.address)
+      .flatMap(gpsPoint => repo.savePerson(person, gpsPoint))
+
+  def internalError: HttpResponse = HttpResponse.InternalServerError()
+  def created: HttpResponse       = HttpResponse.Created("Done 👍")
+
+  val parsed: Either[PCE, Person] = JSON.parse[Person](json)
+
+  parsed match {
+    case Left(InvalidPersonAge(age))      => Future.successful(HttpResponse.BadRequest(s"Invalid age: $age"))
+    case Left(TooDumbNameException(name)) => Future.successful(HttpResponse.BadRequest(s"Invalid name: $name"))
+    ...
+    case Right(person)                    => save(person).fold(_ => internalError)(_ => created)
+  }
+}
+```
+---
 class: center, middle
 
 # Functional programming ? 🤔
@@ -933,15 +1072,16 @@ class: center, middle
 # Functional programming ? 🤔
 
 <br />
-
+.center[
 ## Functional Programing is programming with functions
+]
 ---
 # Functional programming ? 🤔
 
 <br />
-
+.center[
 ## Functional Programing is programming with functions
-
+]
 <br />
 
 .bold[What does this mean ?]
@@ -950,8 +1090,9 @@ class: center, middle
 
 <br />
 
+.center[
 ## Functional Programing is programming with functions
-
+]
 <br />
 
 .bold[What does this mean ?]
@@ -959,11 +1100,11 @@ class: center, middle
 It means that functions are first-class values:
 
 ```scala
-val f: String => Int = (s: String) => s.size   // a function is a Type, just like String, Int, Person, etc.
+val f: `String => Int` = (s: String) => s.size      // a function is a Type, just like String, Int, Person, etc.
 
-val a: Option[Int]   = Option("a string instance").map(f) // A function can take a function in parameter
+def map[A, B](a: F[A], `f: A => B`): F[B]           // A function can take a function in parameter
 
-def parse[A, B](value: String): (A, String) => B          // A function can return a function
+def parse[A, B](value: String): `(A, String) => B`  // A function can return a function
 ```
 
 ---
@@ -971,7 +1112,9 @@ def parse[A, B](value: String): (A, String) => B          // A function can retu
 
 <br />
 
+.center[
 ## Functional Programing is programming with functions
+]
 
 <br />
 
@@ -983,7 +1126,9 @@ def parse[A, B](value: String): (A, String) => B          // A function can retu
 
 <br />
 
+.center[
 ## Functional Programing is programming with functions
+]
 
 <br />
 
@@ -997,7 +1142,9 @@ Seriously ? 😄
 
 <br />
 
+.center[
 ## Functional Programing is programming with functions
+]
 
 <br />
 
@@ -1011,7 +1158,9 @@ Seriously ? 😄
 
 <br />
 
+.center[
 ## Functional Programing is programming with functions
+]
 
 <br />
 
@@ -1030,14 +1179,15 @@ class: center, middle
 ---
 # What is a function in FP ?
 
-And here, it's where Xavier will disagree with me.
+<br />
+<br />
+<br />
+<br />
+<br />
 
-<br />
-<br />
-<br />
-<br />
-
-## A function in FP is a mathematical function, also called "pure function"
+.center[
+## A function in FP is a mathematical function,<br /> also called "pure function"
+]
 
 ---
 # What is a .red[pure] function in FP ?
