@@ -30,6 +30,7 @@
       }
       .small { font-size: small; }
       .large { font-size: large; }
+      .underlined { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -63,6 +64,8 @@ Jules Ivanic • `@guizmaii`
  - Mostly Scala/FP developer today
 
  - Ex-CTO @ Colisweb .small[(Ils recrutent: https://www.welcometothejungle.co/fr/companies/colisweb)]
+
+ - Always learning
 
  - Passionate surfer since I'm 11. Leaving to Australia in June 🌊🏄
 
@@ -687,7 +690,7 @@ class: center, middle
 
 # Axiom #1
 
-## With imperative programing, it's impossible to produce a safe and deterministic program in a finite time.
+## With imperative programming, it's impossible to produce a safe and deterministic program in a finite time.
 
 #### It's impossible to know if a method is throwing without reading its code and all the code it calls which takes an infinite time.
 
@@ -744,7 +747,7 @@ class PersonRepo {
 ---
 # 4. Impure FP
 
-... in Scala
+... in .bold[(blocking synchronous imperative. i.e "Java++")] Scala
 
 
 
@@ -904,9 +907,292 @@ class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking I
       .get("https://api.google.com/geocode/address")
       .body("{ \"address\": \"" + address + "\" }")
       .execute()
-      `.map(parse)`  // 'parse' signature: String => GpsPoint
+      `.map(parse)`  // 'parse' signature: String => GpsPoint (I'm assuming that parsing will never fail)
+
+
+
+
+// Side note: A simple and interesting exercice for beginners could be to rewrite this code
+//  with a 'parse' function which have the following signature: String => Either[ParsingError, GpsPoint]
+// 😉
 
 }
+```
+---
+class: center, middle
+
+# Functional programming ? 🤔
+
+---
+# Functional programming ? 🤔
+
+<br />
+
+Here's a definition that, with Xavier ([@vdwxv](https://twitter.com/vdwxv)), we agree and in the same time disagree on:
+
+## Functional Programing is programming with functions
+---
+# Functional programming ? 🤔
+
+<br />
+
+Here's a definition that, with Xavier ([@vdwxv](https://twitter.com/vdwxv)), we agree and in the same time disagree on:
+
+## Functional Programing is programming with functions
+
+<br />
+
+.bold[What does this mean ?]
+---
+# Functional programming ? 🤔
+
+<br />
+
+Here's a definition that, with Xavier ([@vdwxv](https://twitter.com/vdwxv)), we agree and in the same time disagree on:
+
+## Functional Programing is programming with functions
+
+<br />
+
+.bold[What does this mean ?]
+
+It means that functions are first-class values:
+
+```scala
+val f: String => Int = (s: String) => s.size   // a function is a Type, just like String, Int, Person, etc.
+
+val a: Option[Int]   = Option("a string instance").map(f) // A function can take a function in parameter
+
+def parse[A, B](value: String): (A, String) => B          // A function can return a function
+```
+
+---
+# Functional programming ? 🤔
+
+<br />
+
+Here's a definition that, with Xavier ([@vdwxv](https://twitter.com/vdwxv)), we agree and in the same time disagree on:
+
+## Functional Programing is programming with functions
+
+<br />
+
+.bold[What does this mean ?]
+
+.bold[What is programming ?]
+---
+# Functional programming ? 🤔
+
+<br />
+
+Here's a definition that, with Xavier ([@vdwxv](https://twitter.com/vdwxv)), we agree and in the same time disagree on:
+
+## Functional Programing is programming with functions
+
+<br />
+
+.bold[What does this mean ?]
+
+.bold[What is programming ?]
+
+Seriously ? 😄
+---
+# Functional programming ? 🤔
+
+<br />
+
+Here's a definition that, with Xavier ([@vdwxv](https://twitter.com/vdwxv)), we agree and in the same time disagree on:
+
+## Functional Programing is programming with functions
+
+<br />
+
+.bold[What does this mean ?]
+
+.bold[What is programming ?]
+
+.bold[What is a function ?]
+---
+# Functional programming ? 🤔
+
+<br />
+
+Here's a definition that, with Xavier ([@vdwxv](https://twitter.com/vdwxv)), we agree and in the same time disagree on:
+
+## Functional Programing is programming with functions
+
+<br />
+
+.bold[What does this mean ?]
+
+.bold[What is programming ?]
+
+.bold[What is a function ?]
+
+And here's the real interesting question!
+---
+class: center, middle
+
+# What is a function in FP ?
+
+---
+# What is a function in FP ?
+
+And here, it's where Xavier will disagree with me.
+
+<br />
+<br />
+<br />
+<br />
+
+## A function in FP is a mathematical function, also called "pure function"
+
+---
+# What is a .red[pure] function in FP ?
+
+A pure function is a function that respects:
+
+  - .bold[Totality]                 (defined for every possible values of its input types)
+
+  - .bold[Determinism]              (same inputs will always produce same outputs)
+
+  - .bold[Referencial transparency] (produce its output and nothing else)
+---
+# What is a .red[pure] function in FP ?
+
+A pure function is a function that respects:
+
+  - .bold[Totality]                 (defined for every possible values of its input types)
+
+.underlined[Counter examples:]
+
+```scala
+def divide0(a: Int, b: Int): Int = if (b == 0) null else a / b
+def divide1(a: Int, b: Int): Int = if (b == 0) throw new RuntimeException("...") else a / b
+```
+
+  - .bold[Determinism]              (same inputs will always produce same outputs)
+
+  - .bold[Referencial transparency] (produce its output and nothing else)
+---
+# What is a .red[pure] function in FP ?
+
+A pure function is a function that respects:
+
+  - .bold[Totality]                 (defined for every possible values of its input types)
+
+  - .bold[Determinism]              (same inputs will always produce same outputs)
+
+.underlined[Counter examples:]
+
+```scala
+def randMult(a: Int): Int     = Random.nextInt * a
+def isToday(d: Date): Boolean = Date.today == d
+```
+
+  - .bold[Referencial transparency] (produce its output and nothing else)
+---
+# What is a .red[pure] function in FP ?
+
+A pure function is a function that respects:
+
+  - .bold[Totality]                 (defined for every possible values of its input types)
+
+  - .bold[Determinism]              (same inputs will always produce same outputs)
+
+  - .bold[Referencial transparency] (produce its output and nothing else)
+
+.underlined[Counter examples:]
+
+```scala
+def mult(a: Int, b: Int): Int = {
+  val res = a * b
+  println(res)
+  res
+}
+```
+---
+# What is a .red[pure] function in FP ?
+
+A pure function is a function that respects:
+
+  - .bold[Totality]                 (defined for every possible values of its input types)
+
+  - .bold[Determinism]              (same inputs will always produce same outputs)
+
+  - .bold[Referencial transparency] (produce its output and nothing else)
+
+.underlined[Counter examples:]
+
+```scala
+def mult(a: Int, b: Int): Int = {
+  val res = a * b
+  println(res)
+  res
+}
+
+// This simplistic program:
+
+val r0 = mult(1, 2)
+val r1 = mult(2, 3)
+```
+---
+# What is a .red[pure] function in FP ?
+
+A pure function is a function that respects:
+
+  - .bold[Totality]                 (defined for every possible values of its input types)
+
+  - .bold[Determinism]              (same inputs will always produce same outputs)
+
+  - .bold[Referencial transparency] (produce its output and nothing else)
+
+.underlined[Counter examples:]
+
+```scala
+def mult(a: Int, b: Int): Int = {
+  val res = a * b
+  println(res)
+  res
+}
+
+// This simplistic program:
+
+val r0 = mult(1, 2)
+val r1 = mult(2, 3)
+
+// Is not equivalent to this one:
+
+val r0 = 2
+val r1 = 6
+```
+---
+# What is a .red[pure] function in FP ?
+
+A pure function is a function that respects:
+
+  - .bold[Totality]                 (defined for every possible values of its input types)
+
+  - .bold[Determinism]              (same inputs will always produce same outputs)
+
+  - .bold[Referencial transparency] (produce its output and nothing else)
+
+.underlined[Counter examples:]
+
+```scala
+def mult(a: Int, b: Int): Int = ...
+
+// This simplistic program:
+
+val r0 = mult(1, 2)
+val r1 = mult(2, 3)
+
+// Is not equivalent to this one:
+
+val r0 = 2
+val r1 = 6
+
+// So the 'mult' function is not referencially transparent, so it's not pure.
 ```
 ---
 # Conclusion
