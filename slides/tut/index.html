@@ -624,7 +624,7 @@ object Person {
 case class Person(name: String, age: Int, address: String)
 
 object Person {
-  // Holly Graal 🏆 (PCE == PersonCreationException)
+  // Holy Grail 🏆 (PCE == PersonCreationException)
   sealed trait `PCE`(message: String) extends RuntimeException(message)
   case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
   case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
@@ -644,7 +644,7 @@ object Person {
 case class Person(name: String, age: Int, address: String)
 
 object Person {
-  // Holly Graal 🏆 (PCE == PersonCreationException)
+  // Holy Grail 🏆 (PCE == PersonCreationException)
   sealed trait `PCE`(message: String) extends RuntimeException(message)
   case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
   case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
