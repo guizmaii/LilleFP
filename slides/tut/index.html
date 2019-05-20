@@ -71,25 +71,32 @@ Empty
 ---
 # Summary
 
- 1. Disclaimer
+ 1. Motivation
 
- 2. (Synchronous) Imperative OO
+ 2. Disclaimer
 
- 3. Impure FP
+ 3. (Synchronous) Imperative OO
 
- 4. Pure FP
+ 4. Impure FP
 
- 5. Conclusion
+ 5. Pure FP
 
- 6. Questions
+ 6. Conclusion
+
+ 7. Questions
 
 ---
 class: center, middle
 
-# 1. Disclaimer
+# 1. Motivation
 
 ---
-# 1. Disclaimer
+class: center, middle
+
+# 2. Disclaimer
+
+---
+# 2. Disclaimer
 
 <br />
 <br />
@@ -119,10 +126,10 @@ Pour moi, cette notion d'"intuition" est essentiel, c'est pourquoi je tenais à 
 ---
 class: center, middle
 
-# 2. (Synchronous) Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ---
-# Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ```java
 // I used to write things like that...
@@ -154,7 +161,7 @@ class Person {
 }
 ```
 ---
-# (Synchronous) Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ```java
 // I used to write things like that...
@@ -186,7 +193,7 @@ class PersonRepoSpring {
 }
 ```
 ---
-# (Synchronous) Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ```java
 // I used to write things like that...
@@ -211,7 +218,7 @@ class GoogleService {
 }
 ```
 ---
-# (Synchronous) Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ```java
 class Server extends FrameworkMagic {
@@ -232,7 +239,7 @@ class Server extends FrameworkMagic {
 }
 ```
 ---
-# (Synchronous) Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ```java
 @Put("/person")
@@ -246,7 +253,7 @@ public HttpResponse createPerson(@Body Person person) {
 }
 ```
 ---
-# (Synchronous) Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ```java
 @Put("/person")
@@ -266,7 +273,7 @@ public HttpResponse createPerson(@Body Person person) {
 
 .bold[Me (your CTO) 👨‍🏫 :] You're fired. You waste our money.
 ---
-# (Synchronous) Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ```java
 @Put("/person")
@@ -288,7 +295,7 @@ Problems in this code:
   - Uncontrolled side effects
   - mutable
 ---
-# (Synchronous) Imperative OO
+# 3. (Synchronous) Imperative OO
 
 ```java
 @Put("/person")
@@ -329,10 +336,10 @@ Thanks to ???
 ---
 class: center, middle
 
-# 3. Impure FP
+# 4. Impure FP
 
 ---
-# Impure FP
+# 4. Impure FP
 
 First, let's rewrite the `Person` class ...
 
@@ -364,7 +371,7 @@ class Person {
 }
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ... in Scala
 
@@ -372,7 +379,7 @@ class Person {
 case class Person(name: String, age: Int, address: String)
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ... in .bold[Scala]
 
@@ -384,7 +391,7 @@ case class Person(name: String, age: Int, address: String)
 
 .bold[BOOOMM] 🤩
 ---
-# Impure FP
+# 4. Impure FP
 
 ... in .bold[Scala]
 
@@ -400,7 +407,7 @@ But why choose Scala ? Why not stay with Java ?
 
 And also, is this code really equivalent to the previous Java one ?
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:silent
 case class Person(name: String, age: Int, address: String)
@@ -422,7 +429,7 @@ val jules = Person("Jules", 30, "Sydney, Australia")
 
 Now, it's equivalent to the Java code.
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:silent
 case class Person(name: String, age: Int, address: String)
@@ -446,7 +453,7 @@ Now, it's equivalent to the Java code.
 
 .bold[Except that it's immutable] 🤩
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:silent
 case class Person(name: String, age: Int, address: String)
@@ -473,7 +480,7 @@ Now, it's equivalent to the Java code.
 
 👨‍🏫: But with this code, you're still fired!
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:nofail:silent
 case class Person(name: String, age: Int, address: String)
@@ -488,7 +495,7 @@ object Person {
 }
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:nofail:silent
 case class Person(name: String, age: Int, address: String)
@@ -508,7 +515,7 @@ object Person {
 }
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:nofail:silent
 case class Person(name: String, age: Int, address: String)
@@ -533,7 +540,7 @@ object Person {
 }
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:nofail:silent
 case class Person(name: String, age: Int, address: String)
@@ -565,7 +572,7 @@ object Person {
 }
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:nofail:silent
 case class Person(name: String, age: Int, address: String)
@@ -582,7 +589,7 @@ object Person {
 }
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:nofail:silent
 case class Person(name: String, age: Int, address: String)
@@ -611,7 +618,7 @@ object Person {
 }
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:nofail:silent
 case class Person(name: String, age: Int, address: String)
@@ -631,7 +638,7 @@ object Person {
 }
 ```
 ---
-# Impure FP
+# 4. Impure FP
 
 ```tut:nofail:silent
 case class Person(name: String, age: Int, address: String)
@@ -657,6 +664,14 @@ What's the problem with throwing exceptions ?
   - Makes methods' signature lie
   - Impossible to know if a method is throwing without reading its code and all the code it calls! .bold[(Takes infinite time)]
   - it's an uncontrolled side effect
+---
+class: center, middle
+
+# Axiom #1
+
+## With imperative programing, it's impossible to produce a safe and deterministic program in a finite time
+
+.right.small[Jules Ivanic]
 ---
 # Conclusion
 
