@@ -285,11 +285,11 @@ class: center, middle
 <br />
 
 .center[
-## A function in FP is a mathematical function,<br /> also called "pure function"
+## A function in (pure) FP is a mathematical function,<br /> also called "pure function"
 ]
 
 ---
-# 4. What is a .red[pure] function in FP ?
+# 4. What is a .red[pure] function ?
 
 A pure function is a function that respects:
 
@@ -299,7 +299,7 @@ A pure function is a function that respects:
 
 - .bold[Referencial transparency] (produce its output and nothing else)
 ---
-# 4. What is a .red[pure] function in FP ?
+# 4. What is a .red[pure] function ?
 
 A pure function is a function that respects:
 
@@ -316,7 +316,7 @@ def divide1(a: Int, b: Int): Int = if (b == 0) throw new RuntimeException("...")
 
 - .bold[Referencial transparency] (produce its output and nothing else)
 ---
-# 4. What is a .red[pure] function in FP ?
+# 4. What is a .red[pure] function ?
 
 A pure function is a function that respects:
 
@@ -333,7 +333,7 @@ def isToday(d: Date): Boolean = Date.today == d
 
 - .bold[Referencial transparency] (produce its output and nothing else)
 ---
-# 4. What is a .red[pure] function in FP ?
+# 4. What is a .red[pure] function ?
 
 A pure function is a function that respects:
 
@@ -353,7 +353,7 @@ def mult(a: Int, b: Int): Int = {
 }
 ```
 ---
-# 4. What is a .red[pure] function in FP ?
+# 4. What is a .red[pure] function ?
 
 A pure function is a function that respects:
 
@@ -378,7 +378,7 @@ val r0 = mult(1, 2)
 val r1 = mult(2, 3)
 ```
 ---
-# 4. What is a .red[pure] function in FP ?
+# 4. What is a .red[pure] function ?
 
 A pure function is a function that respects:
 
@@ -408,7 +408,7 @@ val r0 = 2
 val r1 = 6
 ```
 ---
-# 4. What is a .red[pure] function in FP ?
+# 4. What is a .red[pure] function ?
 
 A pure function is a function that respects:
 
@@ -1641,7 +1641,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$44886/688775692@4b0513fc)
+// t: Task[GpsPoint] = Task($$Lambda$47616/1153634849@58a786c7)
 
 // is very different than:
 
@@ -1671,7 +1671,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$44928/980204112@3f841754)
+// t: Task[GpsPoint] = Task($$Lambda$47658/2046542741@21e08dc)
 
 // is very different than:
 
