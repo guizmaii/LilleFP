@@ -1250,7 +1250,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GoogleService(httpClient: HttpClient) {
 
-  // 'map' signature: Future[A].map[B]((a: A) => B): Future[B]
+  // 'map' signature: Future[A].map[B](f: A => B): Future[B]
 
   def geocode(address: String)(implicit ex: ExecutionContext): Future[GpsPoint] =
     Future {
@@ -1640,7 +1640,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$37852/1519071619@3fa40543)
+// t: Task[GpsPoint] = Task($$Lambda$42156/1467894726@1805c0aa)
 
 // is very different than:
 
@@ -1670,7 +1670,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$37894/1563828906@71f915fb)
+// t: Task[GpsPoint] = Task($$Lambda$42198/564609369@6b65878d)
 
 // is very different than:
 
