@@ -1594,7 +1594,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$28315/1189439074@7929887b)
+// t: Task[GpsPoint] = Task($$Lambda$10500/1558898969@133373bb)
 
 // is very different than:
 
@@ -1624,7 +1624,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$28357/903703078@3f444f19)
+// t: Task[GpsPoint] = Task($$Lambda$10542/1681450049@60ca95de)
 
 // is very different than:
 
@@ -1815,7 +1815,7 @@ def createPerson(Json json): Future[HttpResponse] = {
   def internalError: HttpResponse = HttpResponse.InternalServerError()
   def created: HttpResponse       = HttpResponse.Created("Done 👍")
 
-  val parsed: `Task[Either[PCE, Person]]` = `Task(JSON.parse[Person](json))`
+  val parsed: `Task[Either[PCE, Person]]` = `Task.now(JSON.parse[Person](json))`
 
   ...
 }
@@ -1837,7 +1837,7 @@ def createPerson(Json json): Future[HttpResponse] = {
   def internalError: HttpResponse = HttpResponse.InternalServerError()
   def created: HttpResponse       = HttpResponse.Created("Done 👍")
 
-  val parsed: Task[Either[PCE, Person]] = Task(JSON.parse[Person](json))
+  val parsed: Task[Either[PCE, Person]] = Task.now(JSON.parse[Person](json))
 
   parsed`.flatMap(`_ match {
     case Left(InvalidPersonAge(age))      => `Task.now`(HttpResponse.BadRequest(s"Invalid age: $age"))
@@ -1864,7 +1864,7 @@ def createPerson(Json json): Future[HttpResponse] = {
   def internalError: HttpResponse = HttpResponse.InternalServerError()
   def created: HttpResponse       = HttpResponse.Created("Done 👍")
 
-  val parsed: Task[Either[PCE, Person]] = Task(JSON.parse[Person](json))
+  val parsed: Task[Either[PCE, Person]] = Task.now(JSON.parse[Person](json))
 
   parsed`.flatMap(`_ match {
     case Left(InvalidPersonAge(age))      => `Task.now`(HttpResponse.BadRequest(s"Invalid age: $age"))
@@ -1892,9 +1892,9 @@ def createPerson(Json json): Future[HttpResponse] = {
   def internalError: HttpResponse = HttpResponse.InternalServerError()
   def created: HttpResponse       = HttpResponse.Created("Done 👍")
 
-  val parsed: Task[Either[PCE, Person]] = Task(JSON.parse[Person](json))
+  val parsed: Task[Either[PCE, Person]] = Task.now(JSON.parse[Person](json))
 
-  `val program =`
+  `val program: Task[HttpResponse] =`
     parsed`.flatMap(`_ match {
       case Left(InvalidPersonAge(age))      => `Task.now`(HttpResponse.BadRequest(s"Invalid age: $age"))
       case Left(TooDumbNameException(name)) => `Task.now`(HttpResponse.BadRequest(s"Invalid name: $name"))
@@ -1925,7 +1925,7 @@ In Scala, there's 3 differents implementations:
 Now, you're able to understand the signature of the Haskell `main` function:
 
 ```haskell
-main :: IO ()     // '()' == 'Unit' in Scala. So, the equivalent signature in Scala is `IO[Unit]`
+main :: IO ()     -- '()' == 'Unit' in Scala. So, the equivalent signature in Scala is `IO[Unit]`
 ```
 ---
 # 5. Pure FP
@@ -1933,7 +1933,7 @@ main :: IO ()     // '()' == 'Unit' in Scala. So, the equivalent signature in Sc
 Now, you're able to understand the signature of the Haskell `main` function:
 
 ```haskell
-main :: IO ()     // '()' == 'Unit' in Scala. So, the equivalent signature in Scala is `IO[Unit]`
+main :: IO ()     -- '()' == 'Unit' in Scala. So, the equivalent signature in Scala is `IO[Unit]`
 ```
 
 And also see why Scala is not a pure programming language:

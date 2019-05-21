@@ -1837,7 +1837,7 @@ def createPerson(Json json): Future[HttpResponse] = {
   def internalError: HttpResponse = HttpResponse.InternalServerError()
   def created: HttpResponse       = HttpResponse.Created("Done 👍")
 
-  val parsed: `Task[Either[PCE, Person]]` = `Task(JSON.parse[Person](json))`
+  val parsed: `Task[Either[PCE, Person]]` = `Task.now(JSON.parse[Person](json))`
 
   ...
 }
@@ -1859,7 +1859,7 @@ def createPerson(Json json): Future[HttpResponse] = {
   def internalError: HttpResponse = HttpResponse.InternalServerError()
   def created: HttpResponse       = HttpResponse.Created("Done 👍")
 
-  val parsed: Task[Either[PCE, Person]] = Task(JSON.parse[Person](json))
+  val parsed: Task[Either[PCE, Person]] = Task.now(JSON.parse[Person](json))
 
   parsed`.flatMap(`_ match {
     case Left(InvalidPersonAge(age))      => `Task.now`(HttpResponse.BadRequest(s"Invalid age: $age"))
@@ -1886,7 +1886,7 @@ def createPerson(Json json): Future[HttpResponse] = {
   def internalError: HttpResponse = HttpResponse.InternalServerError()
   def created: HttpResponse       = HttpResponse.Created("Done 👍")
 
-  val parsed: Task[Either[PCE, Person]] = Task(JSON.parse[Person](json))
+  val parsed: Task[Either[PCE, Person]] = Task.now(JSON.parse[Person](json))
 
   parsed`.flatMap(`_ match {
     case Left(InvalidPersonAge(age))      => `Task.now`(HttpResponse.BadRequest(s"Invalid age: $age"))
@@ -1914,9 +1914,9 @@ def createPerson(Json json): Future[HttpResponse] = {
   def internalError: HttpResponse = HttpResponse.InternalServerError()
   def created: HttpResponse       = HttpResponse.Created("Done 👍")
 
-  val parsed: Task[Either[PCE, Person]] = Task(JSON.parse[Person](json))
+  val parsed: Task[Either[PCE, Person]] = Task.now(JSON.parse[Person](json))
 
-  `val program =`
+  `val program: Task[HttpResponse] =`
     parsed`.flatMap(`_ match {
       case Left(InvalidPersonAge(age))      => `Task.now`(HttpResponse.BadRequest(s"Invalid age: $age"))
       case Left(TooDumbNameException(name)) => `Task.now`(HttpResponse.BadRequest(s"Invalid name: $name"))
@@ -1947,7 +1947,7 @@ In Scala, there's 3 differents implementations:
 Now, you're able to understand the signature of the Haskell `main` function:
 
 ```haskell
-main :: IO ()     // '()' == 'Unit' in Scala. So, the equivalent signature in Scala is `IO[Unit]`
+main :: IO ()     -- '()' == 'Unit' in Scala. So, the equivalent signature in Scala is `IO[Unit]`
 ```
 ---
 # 5. Pure FP
@@ -1955,7 +1955,7 @@ main :: IO ()     // '()' == 'Unit' in Scala. So, the equivalent signature in Sc
 Now, you're able to understand the signature of the Haskell `main` function:
 
 ```haskell
-main :: IO ()     // '()' == 'Unit' in Scala. So, the equivalent signature in Scala is `IO[Unit]`
+main :: IO ()     -- '()' == 'Unit' in Scala. So, the equivalent signature in Scala is `IO[Unit]`
 ```
 
 And also see why Scala is not a pure programming language:
