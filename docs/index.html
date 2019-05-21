@@ -453,7 +453,7 @@ Because this constraint enables a simple and natural mode of .bold[reasoning] ab
 
 if we know that .blue[`f(x)`] returns .blue[`y`] and know that `f` is pure<br />
 ---
-# Why do we restrict ourself to pure functions ?
+# 5. Why do we restrict ourself to pure functions ?
 
 Because this constraint enables a simple and natural mode of .bold[reasoning] about program evaluation called the .bold[substitution model].
 
@@ -1635,7 +1635,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$61223/1051015658@6452f208)
+// t: Task[GpsPoint] = Task($$Lambda$5055/713265461@141129e2)
 
 // is very different than:
 
@@ -1665,7 +1665,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$61265/636686636@7bc437d9)
+// t: Task[GpsPoint] = Task($$Lambda$5098/1351849880@4279956d)
 
 // is very different than:
 
