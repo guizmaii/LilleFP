@@ -1224,6 +1224,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GoogleService(httpClient: HttpClient) {
 
+  // 'map' signature: Future[A].map[B]((a: A) => B): Future[B]
+
   def geocode(address: String)(implicit ex: ExecutionContext): `Future[GpsPoint]` =
     `Future {`
       httpClient
@@ -1248,6 +1250,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GoogleService(httpClient: HttpClient) {
 
+  // 'map' signature: Future[A].map[B]((a: A) => B): Future[B]
+
   def geocode(address: String)(implicit ex: ExecutionContext): Future[GpsPoint] =
     Future {
       httpClient
@@ -1256,7 +1260,6 @@ class GoogleService(httpClient: HttpClient) {
         .execute()
     }
     `.map(parse)`  // 'parse' signature: String => GpsPoint (I'm assuming that parsing will never fail)
-
 
 
 
@@ -1311,6 +1314,7 @@ def createPerson(`Json json`)(implicit ec: ExecutionContext): `Future[HttpRespon
 def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
   // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
+  // 'map' signature:     Future[A].map[B]((a: A) => B): Future[B]
 
   def save(person: Person): Future[Unit] =
     geocoder
