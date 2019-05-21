@@ -907,7 +907,7 @@ class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking I
 ---
 # 4. Impure FP
 
-Finally, let's rewrite our `Service` 'createPerson' method.
+Finally, let's rewrite our `Server` 'createPerson' method.
 
 Here's the Java version we will rewrite ...
 
@@ -1594,7 +1594,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$21420/789586532@3f91913d)
+// t: Task[GpsPoint] = Task($$Lambda$22785/38070188@c0b6034)
 
 // is very different than:
 
@@ -1624,7 +1624,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$21462/930822809@6a0689c6)
+// t: Task[GpsPoint] = Task($$Lambda$22827/641831634@485ea091)
 
 // is very different than:
 
@@ -1743,7 +1743,7 @@ class GoogleService(httpClient: AsyncNIOHttpClient) {
 ---
 # 5. Pure FP
 
-And finally, let's purify our `Service` impure code ...
+And finally, let's purify our `Server` impure code ...
 
 ```scala
 @Put("/person")

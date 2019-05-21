@@ -907,7 +907,7 @@ class GoogleService(httpClient: `AsyncNIOHttpClient`) { // NIO == Non-blocking I
 ---
 # 4. Impure FP
 
-Finally, let's rewrite our `Service` 'createPerson' method.
+Finally, let's rewrite our `Server` 'createPerson' method.
 
 Here's the Java version we will rewrite ...
 
@@ -1765,7 +1765,7 @@ class GoogleService(httpClient: AsyncNIOHttpClient) {
 ---
 # 5. Pure FP
 
-And finally, let's purify our `Service` impure code ...
+And finally, let's purify our `Server` impure code ...
 
 ```scala
 @Put("/person")
