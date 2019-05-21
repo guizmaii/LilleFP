@@ -1635,7 +1635,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$58493/215062024@64912ec6)
+// t: Task[GpsPoint] = Task($$Lambda$61223/1051015658@6452f208)
 
 // is very different than:
 
@@ -1665,7 +1665,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$58535/136635545@7959e1b2)
+// t: Task[GpsPoint] = Task($$Lambda$61265/636686636@7bc437d9)
 
 // is very different than:
 
@@ -1990,10 +1990,11 @@ class: center, middle
 ---
 # Conclusion
 
+FP helps me to write declarative code.
 
-FP helps me to write more declarative code.
+Pure FP help me to write composable code.
 
-Pure FP help me to write more composable code.
+Give a try!
 ---
 class: center, middle
 
