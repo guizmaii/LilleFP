@@ -1224,7 +1224,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GoogleService(httpClient: HttpClient) {
 
-  // 'map' signature: Future[A].map[B]((a: A) => B): Future[B]
+  // 'map' signature: Future[A].map[B](f: A => B): Future[B]
 
   def geocode(address: String)(implicit ex: ExecutionContext): `Future[GpsPoint]` =
     `Future {`
@@ -1313,8 +1313,8 @@ def createPerson(`Json json`)(implicit ec: ExecutionContext): `Future[HttpRespon
 @Put("/person")
 def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
-  // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
-  // 'map' signature:     Future[A].map[B]((a: A) => B): Future[B]
+  // 'flatMap' signature: Future[A].flatMap[B](f: A => Future[B]): Future[B]
+  // 'map' signature:     Future[A].map[B](f: A => B): Future[B]
 
   def save(person: Person): Future[Unit] =
     geocoder
@@ -1336,7 +1336,7 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
 @Put("/person")
 def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
-  // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
+  // 'flatMap' signature: Future[A].flatMap[B](f: A => Future[B]): Future[B]
 
   def save(person: Person): Future[Unit] =
     geocoder
@@ -1360,7 +1360,7 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
 @Put("/person")
 def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
-  // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
+  // 'flatMap' signature: Future[A].flatMap[B](f: A => Future[B]): Future[B]
 
   def save(person: Person): Future[Unit] =
     geocoder
@@ -1387,7 +1387,7 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
 @Put("/person")
 def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
-  // 'flatMap' signature: Future[A].flatMap[B]((a: A) => Future[B]): Future[B]
+  // 'flatMap' signature: Future[A].flatMap[B](f: A => Future[B]): Future[B]
 
   def save(person: Person): Future[Unit] =
     geocoder
