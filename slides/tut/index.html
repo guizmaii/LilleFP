@@ -1757,12 +1757,12 @@ import monix.eval.Task
 class PersonRepo(dbInstance: DB) {
 
   def savePerson(p: Person, point: GpsPoint): `Task[Unit]` =
-    `Task {`
+    `Task` {
       dbInstance.query(
         "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
         p.name, p.age, p.address, point
       )
-    `}`
+    }
 
 }
 ```
