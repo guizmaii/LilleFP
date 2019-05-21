@@ -82,7 +82,7 @@ Empty
 
  3. Functional programming ? 🤔
 
- 4. What is a function in FP ?
+ 4. What is a function in (pure) FP ?
 
  5. Why do we restrict ourself to pure functions ?
   
@@ -273,10 +273,10 @@ And here's the real interesting question!
 ---
 class: center, middle
 
-# 4. What is a function in FP ?
+# 4. What is a function in (pure) FP ?
 
 ---
-# 4. What is a function in FP ?
+# 4. What is a function in (pure) FP ?
 
 <br />
 <br />
@@ -1635,7 +1635,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$57128/1692713144@3bf9b2ab)
+// t: Task[GpsPoint] = Task($$Lambda$58493/215062024@64912ec6)
 
 // is very different than:
 
@@ -1665,7 +1665,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$57170/1737959264@21644905)
+// t: Task[GpsPoint] = Task($$Lambda$58535/136635545@7959e1b2)
 
 // is very different than:
 
