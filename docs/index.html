@@ -1480,7 +1480,7 @@ scala> twoEffects
 hello
 hello
 
-// is not equivalent to this while it should be:
+// is not equivalent to this while it should be if pure:
 
 lazy val anEffect = Future { println("hello") }
 
@@ -1594,7 +1594,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$20055/633513382@271e269b)
+// t: Task[GpsPoint] = Task($$Lambda$21420/789586532@3f91913d)
 
 // is very different than:
 
@@ -1624,7 +1624,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$20097/1562898145@178e9d62)
+// t: Task[GpsPoint] = Task($$Lambda$21462/930822809@6a0689c6)
 
 // is very different than:
 
