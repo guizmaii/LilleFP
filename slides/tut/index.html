@@ -1250,7 +1250,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class GoogleService(httpClient: HttpClient) {
 
-  // 'map' signature: Future[A].map[B]((a: A) => B): Future[B]
+  // 'map' signature: Future[A].map[B](f: A => B): Future[B]
 
   def geocode(address: String)(implicit ex: ExecutionContext): Future[GpsPoint] =
     Future {
