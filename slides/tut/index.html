@@ -1471,9 +1471,9 @@ class PersonRepo(dbInstance: DB) {
   def savePerson(p: Person, point: GpsPoint)(implicit ex: ExecutionContext): `Future[Unit]` =
     Future {
       dbInstance.query(
-      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
-      p.name, p.age, p.address, point
-    )
+        "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+        p.name, p.age, p.address, point
+      )
 
 }
 ```

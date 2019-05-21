@@ -1471,9 +1471,9 @@ class PersonRepo(dbInstance: DB) {
   def savePerson(p: Person, point: GpsPoint)(implicit ex: ExecutionContext): `Future[Unit]` =
     Future {
       dbInstance.query(
-      "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
-      p.name, p.age, p.address, point
-    )
+        "INSERT INTO PERSONS (name, age, address, gpsPoint) VALUES (?, ?, ?, ?)",
+        p.name, p.age, p.address, point
+      )
 
 }
 ```
@@ -1635,7 +1635,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$5055/713265461@141129e2)
+// t: Task[GpsPoint] = Task($$Lambda$6461/524280862@1ff19c5e)
 
 // is very different than:
 
@@ -1665,7 +1665,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$5098/1351849880@4279956d)
+// t: Task[GpsPoint] = Task($$Lambda$6503/1399909101@784b0b5f)
 
 // is very different than:
 
