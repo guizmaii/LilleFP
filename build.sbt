@@ -24,6 +24,7 @@ lazy val LilleFP = project.in(file("."))
 lazy val core = project
   .settings(moduleName := "LilleFP-core")
   .settings(baseSettings: _*)
+  .settings(libraryDependencies += "io.monix" %% "monix" % "3.0.0-RC2")
 
 lazy val slides = project
   .settings(moduleName := "LilleFP-slides")
