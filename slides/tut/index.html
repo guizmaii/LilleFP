@@ -1238,6 +1238,7 @@ class GoogleService(httpClient: HttpClient) {
 }
 ```
 ---
+exclude: true
 # 7. Impure FP
 
 <br />
@@ -1787,7 +1788,7 @@ class GoogleService(httpClient: HttpClient) {
         .body("{ \"address\": \"" + address + "\" }")
         .execute()
     }
-    .map(parse)
+    .map(res => parse(res))
 
 }
 ```
@@ -1808,7 +1809,7 @@ class GoogleService(httpClient: HttpClient) {
         .body("{ \"address\": \"" + address + "\" }")
         .execute()
     }
-    .map(parse)
+    .map(res => parse(res))
 
 }
 ```
