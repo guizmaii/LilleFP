@@ -1641,7 +1641,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$9338/132140166@5afce552)
+// t: Task[GpsPoint] = Task($$Lambda$14798/1610474480@2ca931db)
 
 // is very different than:
 
@@ -1671,7 +1671,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$9380/87610004@3347fa56)
+// t: Task[GpsPoint] = Task($$Lambda$14840/1063657364@39a99229)
 
 // is very different than:
 
@@ -2038,7 +2038,10 @@ class: center, middle
 class: center, middle
 
 # Thanks!
-Code and slides at `https://guizmaii.github.io/LilleFP` on GitHub
+
+Slides at `https://guizmaii.github.io/LilleFP`
+
+Code at `https://github.com/guizmaii/LilleFP`
 
 ## Questions?
 
