@@ -61,7 +61,7 @@ Jules Ivanic • `@guizmaii`
 
  - 30 years old
 
- - Professional developer since 7 years.
+ - Professional developer for 7 years.
 
  - Mostly Scala/FP developer today
 
@@ -1641,7 +1641,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$17528/826946350@73943bd)
+// t: Task[GpsPoint] = Task($$Lambda$18893/1683312063@7d21d023)
 
 // is very different than:
 
@@ -1671,7 +1671,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$17570/1257205358@7a4172da)
+// t: Task[GpsPoint] = Task($$Lambda$18935/1267938809@502561fc)
 
 // is very different than:
 
