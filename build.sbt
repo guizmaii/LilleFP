@@ -1,5 +1,5 @@
 lazy val baseSettings: Seq[Setting[_]] = Seq(
-  scalaVersion       := "2.12.8",
+  scalaVersion       := "2.12.12",
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -24,7 +24,7 @@ lazy val LilleFP = project.in(file("."))
 lazy val core = project
   .settings(moduleName := "LilleFP-core")
   .settings(baseSettings: _*)
-  .settings(libraryDependencies += "io.monix" %% "monix" % "3.0.0-RC2")
+  .settings(libraryDependencies += "io.monix" %% "monix" % "3.3.0")
 
 lazy val slides = project
   .settings(moduleName := "LilleFP-slides")
