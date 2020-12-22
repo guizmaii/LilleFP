@@ -1641,7 +1641,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$18893/1683312063@7d21d023)
+// t: Task[GpsPoint] = Task($Lambda$11765/0x000000080160c840@4e7e2432)
 
 // is very different than:
 
@@ -1671,7 +1671,7 @@ case class Task[A](a: () => A)
 
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
-// t: Task[GpsPoint] = Task($$Lambda$18935/1267938809@502561fc)
+// t: Task[GpsPoint] = Task($Lambda$11805/0x00000008015e2840@5adaf5e)
 
 // is very different than:
 
