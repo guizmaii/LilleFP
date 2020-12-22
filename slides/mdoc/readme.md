@@ -2000,7 +2000,7 @@ Done! 👍😊
 The previous `Task` data structure is an implementation of .bold[the IO Monad].
 
 The IO Monad is sometimes named .blue[`IO`], sometimes .blue[`Task`], etc.<br />
-It'll depend on your programming language and/or the implementation you use.
+It'll depend on your programming language and/or the implementation you choose.
 
 In Scala, there're 3 different implementations:
   - .underlined[Monix], which named it .blue[`Task`]: https://monix.io/
