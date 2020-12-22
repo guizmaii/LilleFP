@@ -308,7 +308,7 @@ A pure function is a function that respects:
 ```scala
 def mult(a: Int, b: Int): Int = {
   val res = a * b
-  println(res)
+  launchMissile(res)
   res
 }
 ```
@@ -328,14 +328,12 @@ A pure function is a function that respects:
 ```scala
 def mult(a: Int, b: Int): Int = {
   val res = a * b
-  println(res)
+  launchMissile(res)
   res
 }
 
 // This simplistic program:
-
-val r0 = mult(1, 2)
-val r1 = mult(2, 3)
+val r0 = mult(1, 2) + mult(2, 3)
 ```
 ---
 # 4. What is a .red[pure] function ?
@@ -353,19 +351,15 @@ A pure function is a function that respects:
 ```scala
 def mult(a: Int, b: Int): Int = {
   val res = a * b
-  println(res)
+  launchMissile(res)
   res
 }
 
 // This simplistic program:
-
-val r0 = mult(1, 2)
-val r1 = mult(2, 3)
+val r0 = mult(1, 2) + mult(2, 3)
 
 // Is not equivalent to this one:
-
-val r0 = 2
-val r1 = 6
+val r1 = 2 + 6
 ```
 ---
 # 4. What is a .red[pure] function ?
@@ -381,19 +375,19 @@ A pure function is a function that respects:
 .underlined[Counter examples:]
 
 ```scala
-def mult(a: Int, b: Int): Int = ...
+def mult(a: Int, b: Int): Int = {
+  val res = a * b
+  launchMissile(res)
+  res
+}
 
 // This simplistic program:
-
-val r0 = mult(1, 2)
-val r1 = mult(2, 3)
+val r0 = mult(1, 2) + mult(2, 3)
 
 // Is not equivalent to this one:
+val r1 = 2 + 6
 
-val r0 = 2
-val r1 = 6
-
-// So the 'mult' function is not referencially transparent, so it's not pure.
+// So the 'mult' function is not referencially transparent
 ```
 ---
 class: center, middle
@@ -1452,51 +1446,47 @@ The problem comes from the `Future`!
 
 .bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
 
-Let's explain it with a simpler example:
-
 ```scala
 // This:
 
-def twoEffects = ( Future { println("hello") }, Future { println("hello") } )
+def twoMissiles: (Future[Unit], Future[Unit]) = ( Future { launchMissile() }, Future { launchMissile() } )
 
-scala> twoEffects
-hello
-hello
+scala> twoMissiles
+🚀
+🚀
 
-scala> twoEffects
-hello
-hello
+scala> twoMissiles
+🚀
+🚀
 ```
 ---
 # 7. Impure FP
 
 .bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
 
-Let's explain it with a simpler example:
-
 ```scala
 // This:
 
-def twoEffects = ( Future { println("hello") }, Future { println("hello") } )
+def twoMissiles: (Future[Unit], Future[Unit]) = ( Future { launchMissile() }, Future { launchMissile() } )
 
-scala> twoEffects
-hello
-hello
+scala> twoMissiles
+🚀
+🚀
 
-scala> twoEffects
-hello
-hello
+scala> twoMissiles
+🚀
+🚀
 
 // is not equivalent to this while it should be if pure:
 
-lazy val anEffect = Future { println("hello") }
+lazy val oneMissile: Future[Unit] = Future { launchMissile() }
 
-def twoEffects = (anEffect, anEffect)
+def twoMissiles: (Future[Unit], Future[Unit]) = (oneMissile, oneMissile)
 
-scala> twoEffects
-hello
+scala> twoMissiles
+🚀
 
-scala> twoEffects
+scala> twoMissiles
 ```
 ---
 # 7. Impure FP
