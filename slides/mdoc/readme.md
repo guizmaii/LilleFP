@@ -308,7 +308,7 @@ A pure function is a function that respects:
 ```scala
 def mult(a: Int, b: Int): Int = {
   val res = a * b
-  launchMissile(res)
+  launchMissile()
   res
 }
 ```
@@ -328,7 +328,7 @@ A pure function is a function that respects:
 ```scala
 def mult(a: Int, b: Int): Int = {
   val res = a * b
-  launchMissile(res)
+  launchMissile()
   res
 }
 
@@ -351,7 +351,7 @@ A pure function is a function that respects:
 ```scala
 def mult(a: Int, b: Int): Int = {
   val res = a * b
-  launchMissile(res)
+  launchMissile()
   res
 }
 
@@ -377,7 +377,7 @@ A pure function is a function that respects:
 ```scala
 def mult(a: Int, b: Int): Int = {
   val res = a * b
-  launchMissile(res)
+  launchMissile()
   res
 }
 
