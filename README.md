@@ -2,11 +2,11 @@
 
 Code in `core` module is accessible in your slides
 
-Raw slides are in `slides/tut/index.html`
+Raw slides are in `slides/mdoc/index.html`
 
 ### How to compile slides
 
-run `sbt slides/tut` to compile slides using [tut][tut]. 
+run `sbt slides/mdoc` to compile slides using [mdoc][mdoc]. 
 You can then view the slides by opening `docs/index.html` in your browser.
 
 ### How to publish slides with github
@@ -22,4 +22,4 @@ This project was generated using [Giter8][g8] with template [presentation.g8][pr
 
 [g8]: http://www.foundweekends.org/giter8/
 [presentation.g8]: https://github.com/julien-truffaut/presentation.g8
-[tut]: https://github.com/tpolecat/tut
+[mdoc]: https://scalameta.org/mdoc/

@@ -702,7 +702,7 @@ class Person {
 ... in Scala
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 ```
 ---
 # 7. Impure FP
@@ -710,7 +710,7 @@ case class Person(name: String, age: Int, address: String)
 ... in .bold[Scala]
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 ```
 
 <br />
@@ -722,7 +722,7 @@ case class Person(name: String, age: Int, address: String)
 ... in .bold[Scala]
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 ```
 
 <br />
@@ -736,7 +736,7 @@ And also, is this code really equivalent to the previous Java one ?
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
 
@@ -758,7 +758,7 @@ Now, it's equivalent to the Java code.
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
 
@@ -782,7 +782,7 @@ Now, it's equivalent to the Java code.
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
 
@@ -824,7 +824,7 @@ class: center, middle
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
 
@@ -839,27 +839,7 @@ object Person {
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
-
-object Person {
-
-  // bad
-  def apply(name: String, ...): Person =
-    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
-    else                      new Person(name, age, address)
-
-  // better
-  def apply2(name: String, ...): Option[Person] =
-    if (age < 0 || age > 120) None
-    else                      Some(new Person(name, age, address))
-
-}
-```
----
-# 7. Impure FP
-
-```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
 
@@ -873,18 +853,13 @@ object Person {
     if (age < 0 || age > 120) None
     else                      Some(new Person(name, age, address))
 
-  // Why not
-  def apply3(name: String, ...): Either[RuntimeException, Person] =
-    if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
-    else                      Right(new Person(name, age, address))
-
 }
 ```
 ---
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
 
@@ -903,8 +878,33 @@ object Person {
     if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
     else                      Right(new Person(name, age, address))
 
+}
+```
+---
+# 7. Impure FP
+
+```scala
+final case class Person(name: String, age: Int, address: String)
+
+object Person {
+
+  // bad
+  def apply(name: String, ...): Person =
+    if (age < 0 || age > 120) throw new RuntimeException("age is invalid")
+    else                      new Person(name, age, address)
+
+  // better
+  def apply2(name: String, ...): Option[Person] =
+    if (age < 0 || age > 120) None
+    else                      Some(new Person(name, age, address))
+
+  // Why not
+  def apply3(name: String, ...): Either[RuntimeException, Person] =
+    if (age < 0 || age > 120) Left(new RuntimeException("age is invalid"))
+    else                      Right(new Person(name, age, address))
+
   // Even better
-  case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
+  final case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
 
   def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
     if (age < 0 || age > 120) Left(InvalidPersonAge(age))
@@ -916,12 +916,12 @@ object Person {
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
 
   // Even better
-  case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
+  final case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
 
   def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
     if (age < 0 || age > 120) Left(InvalidPersonAge(age))
@@ -933,21 +933,21 @@ object Person {
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
 
   // Even better
-  case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
+  final case class InvalidPersonAge(invalidAge: Int) extends RuntimeException(s"age is invalid: $invalidAge")
 
   def apply4(name: String, ...): Either[InvalidPersonAge, Person] =
     if (age < 0 || age > 120) Left(InvalidPersonAge(age))
     else                      Right(new Person(name, age, address))
 
   // Holy Grail 🏆 (PCE == PersonCreationException)
-  sealed trait `PCE`(message: String) extends RuntimeException(message)
-  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  sealed abstract class `PCE`(message: String) extends RuntimeException(message)
+  final case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  final case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
   ...
 
   def apply🏆(name: String, ...): Either[`PCE`, Person] =
@@ -962,13 +962,13 @@ object Person {
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
   // Holy Grail 🏆 (PCE == PersonCreationException)
-  sealed trait `PCE`(message: String) extends RuntimeException(message)
-  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  sealed abstract class `PCE`(message: String) extends RuntimeException(message)
+  final case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  final case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
   ...
 
   def apply🏆(name: String, ...): Either[`PCE`, Person] =
@@ -982,13 +982,13 @@ object Person {
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
   // Holy Grail 🏆 (PCE == PersonCreationException)
-  sealed trait `PCE`(message: String) extends RuntimeException(message)
-  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  sealed abstract class `PCE`(message: String) extends RuntimeException(message)
+  final case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  final case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
   ...
 
   def apply🏆(name: String, ...): Either[`PCE`, Person] =
@@ -1020,13 +1020,13 @@ class: center, middle
 # 7. Impure FP
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
   // Holy Grail 🏆 (PCE == PersonCreationException)
-  sealed trait `PCE`(message: String) extends RuntimeException(message)
-  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  sealed abstract class `PCE`(message: String) extends RuntimeException(message)
+  final case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  final case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
   ...
 
   def apply🏆(name: String, ...): Either[`PCE`, Person] =
@@ -1550,7 +1550,7 @@ Here's the trick FP devs found to purify everything:
 .bold[They don't execute anything!]
 
 ```scala
-case class Task[A](a: () => A)
+final case class Task[A](a: () => A)
 ```
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))
@@ -1569,7 +1569,7 @@ Here's the trick FP devs found to purify everything:
 .bold[They don't execute anything!]
 
 ```scala
-case class Task[A](a: () => A)
+final case class Task[A](a: () => A)
 ```
 ```scala
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))
@@ -1591,7 +1591,7 @@ Here's the trick FP devs found to purify everything:
 
 .bold[They don't execute anything!]
 
-```tut:invisible
+```scala mdoc:invisible
 import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -1604,16 +1604,16 @@ class SyncGeocoder {
 val syncGeocoder = new SyncGeocoder
 val person       = Person("osef")
 ```
-```tut:silent
-case class Task[A](a: () => A)
+```scala mdoc:silent:nest
+final case class Task[A](a: () => A)
 ```
-```tut:invisible
+```scala mdoc:invisible
 object Task {
-  def apply[A](a: => A): Task[A] = new Task(() => a)
+  def apply[A](a: => A)(implicit dummy: DummyImplicit): Task[A] = new Task(() => a)
 }
 ```
 
-```tut:book
+```scala mdoc
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
 
 // is very different than:
@@ -1633,29 +1633,29 @@ Here's the trick FP devs found to purify everything:
 
 .bold[They don't execute anything!]
 
-```tut:invisible
+```scala mdoc:invisible:nest
 import scala.concurrent.{Future, Await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-case class GpsPoint(lat: Double, long: Double)
-case class Person(address: String)
+final case class GpsPoint(lat: Double, long: Double)
+final case class Person(address: String)
 class SyncGeocoder {
   def geocode(address: String): GpsPoint = GpsPoint(12.23, 32.21)
 }
 val syncGeocoder = new SyncGeocoder
 val person       = Person("osef")
 ```
-```tut:silent
-case class Task[A](a: () => A)
+```scala mdoc:silent
+final case class Task[A](a: () => A)
 ```
-```tut:invisible
+```scala mdoc:invisible
 object Task {
-  def apply[A](a: => A): Task[A] = new Task(() => a)
+  def apply[A](a: => A)(implicit dummy: DummyImplicit): Task[A] = new Task(() => a)
 }
 ```
 
-```tut:book
+```scala mdoc
 val t: Task[GpsPoint] = Task(syncGeocoder.geocode(person.address))      // lazy
 
 // is very different than:
@@ -1673,13 +1673,13 @@ So, let's rewrite our impure FP Scala code.
 So, let's rewrite our impure FP Scala code.
 
 ```scala
-case class Person(name: String, age: Int, address: String)
+final case class Person(name: String, age: Int, address: String)
 
 object Person {
   // Holy Grail 🏆 (PCE == PersonCreationException)
-  sealed trait `PCE`(message: String) extends RuntimeException(message)
-  case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
-  case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
+  sealed abstract class `PCE`(message: String) extends RuntimeException(message)
+  final case class InvalidPersonAge(invalidAge: Int)  extends PCE(s"age is invalid: $invalidAge")
+  final case class TooDumbNameException(name: String) extends PCE(s"choosed name is too dumb: $name")
   ...
 
   def apply🏆(name: String, ...): Either[`PCE`, Person] =
