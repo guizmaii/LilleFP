@@ -1251,7 +1251,7 @@ public HttpResponse createPerson(@Body Person person) {
 
 ```scala
 @Put("/person")
-def createPerson(`Json json`)(implicit ec: ExecutionContext): `Future[HttpResponse]` = {
+def createPerson(`json: Json`)(implicit ec: ExecutionContext): `Future[HttpResponse]` = {
 
   ...
 
@@ -1266,7 +1266,7 @@ def createPerson(`Json json`)(implicit ec: ExecutionContext): `Future[HttpRespon
 
 ```scala
 @Put("/person")
-def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+def createPerson(json: Json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
   // 'flatMap' signature: Future[A].flatMap[B](f: A => Future[B]): Future[B]
   // 'map' signature:     Future[A].map[B](f: A => B): Future[B]
@@ -1289,7 +1289,7 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
 
 ```scala
 @Put("/person")
-def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+def createPerson(json: Json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
   // 'flatMap' signature: Future[A].flatMap[B](f: A => Future[B]): Future[B]
 
@@ -1313,7 +1313,7 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
 
 ```scala
 @Put("/person")
-def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+def createPerson(json: Json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
   // 'flatMap' signature: Future[A].flatMap[B](f: A => Future[B]): Future[B]
 
@@ -1340,7 +1340,7 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
 
 ```scala
 @Put("/person")
-def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+def createPerson(json: Json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
   // 'flatMap' signature: Future[A].flatMap[B](f: A => Future[B]): Future[B]
 
@@ -1448,7 +1448,28 @@ The problem comes from the `Future`!
 
 ```scala
 // This:
+def twoMissiles: (Future[Unit], Future[Unit]) = ( Future { launchMissile() }, Future { launchMissile() } )
+```
+---
+# 7. Impure FP
 
+.bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
+
+```scala
+// This:
+def twoMissiles: (Future[Unit], Future[Unit]) = ( Future { launchMissile() }, Future { launchMissile() } )
+
+scala> twoMissiles
+🚀
+🚀
+```
+---
+# 7. Impure FP
+
+.bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
+
+```scala
+// This:
 def twoMissiles: (Future[Unit], Future[Unit]) = ( Future { launchMissile() }, Future { launchMissile() } )
 
 scala> twoMissiles
@@ -1466,7 +1487,6 @@ scala> twoMissiles
 
 ```scala
 // This:
-
 def twoMissiles: (Future[Unit], Future[Unit]) = ( Future { launchMissile() }, Future { launchMissile() } )
 
 scala> twoMissiles
@@ -1478,15 +1498,59 @@ scala> twoMissiles
 🚀
 
 // is not equivalent to this while it should be if pure:
+lazy val oneMissile: Future[Unit]             = Future { launchMissile() }
+def twoMissiles: (Future[Unit], Future[Unit]) = (oneMissile, oneMissile)
+```
+---
+# 7. Impure FP
 
-lazy val oneMissile: Future[Unit] = Future { launchMissile() }
+.bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
 
+```scala
+// This:
+def twoMissiles: (Future[Unit], Future[Unit]) = ( Future { launchMissile() }, Future { launchMissile() } )
+
+scala> twoMissiles
+🚀
+🚀
+
+scala> twoMissiles
+🚀
+🚀
+
+// is not equivalent to this while it should be if pure:
+lazy val oneMissile: Future[Unit]             = Future { launchMissile() }
+def twoMissiles: (Future[Unit], Future[Unit]) = (oneMissile, oneMissile)
+
+scala> twoMissiles
+🚀
+```
+---
+# 7. Impure FP
+
+.bold[Why is the previous code not pure ?] => The problem comes from the `Future`.
+
+```scala
+// This:
+def twoMissiles: (Future[Unit], Future[Unit]) = ( Future { launchMissile() }, Future { launchMissile() } )
+
+scala> twoMissiles
+🚀
+🚀
+
+scala> twoMissiles
+🚀
+🚀
+
+// is not equivalent to this while it should be if pure:
+lazy val oneMissile: Future[Unit]             = Future { launchMissile() }
 def twoMissiles: (Future[Unit], Future[Unit]) = (oneMissile, oneMissile)
 
 scala> twoMissiles
 🚀
 
 scala> twoMissiles
+∅
 ```
 ---
 # 7. Impure FP
@@ -1739,7 +1803,7 @@ And finally, let's purify our `Server` impure code ...
 
 ```scala
 @Put("/person")
-def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
+def createPerson(json: Json)(implicit ec: ExecutionContext): Future[HttpResponse] = {
 
   def save(person: Person): Future[Unit] =
     geocoder
@@ -1766,7 +1830,7 @@ def createPerson(Json json)(implicit ec: ExecutionContext): Future[HttpResponse]
 
 ```scala
 @Put("/person")
-def createPerson(Json json): `Future[HttpResponse]` = {
+def createPerson(json: Json): `Future[HttpResponse]` = {
 
   ...
 
@@ -1779,7 +1843,7 @@ def createPerson(Json json): `Future[HttpResponse]` = {
 
 ```scala
 @Put("/person")
-def createPerson(Json json): Future[HttpResponse] = {
+def createPerson(json: Json): Future[HttpResponse] = {
 
   def save(person: Person): `Task[Unit]` =
     geocoder
@@ -1797,7 +1861,7 @@ def createPerson(Json json): Future[HttpResponse] = {
 
 ```scala
 @Put("/person")
-def createPerson(Json json): Future[HttpResponse] = {
+def createPerson(json: Json): Future[HttpResponse] = {
 
   def save(person: Person): Task[Unit] =
     geocoder
@@ -1819,7 +1883,7 @@ def createPerson(Json json): Future[HttpResponse] = {
 
 ```scala
 @Put("/person")
-def createPerson(Json json): Future[HttpResponse] = {
+def createPerson(json: Json): Future[HttpResponse] = {
 
   def save(person: Person): Task[Unit] =
     geocoder
@@ -1846,7 +1910,7 @@ def createPerson(Json json): Future[HttpResponse] = {
 
 ```scala
 @Put("/person")
-def createPerson(Json json): Future[HttpResponse] = {
+def createPerson(json: Json): Future[HttpResponse] = {
 
   def save(person: Person): Task[Unit] =
     geocoder
@@ -1875,7 +1939,7 @@ def createPerson(Json json): Future[HttpResponse] = {
 
 ```scala
 @Put("/person")
-def createPerson(Json json): Future[HttpResponse] = {
+def createPerson(json: Json): Future[HttpResponse] = {
   def save(person: Person): Task[Unit] =
     geocoder
       .geocode(person.address)
