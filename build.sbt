@@ -1,5 +1,5 @@
 lazy val baseSettings: Seq[Setting[_]] = Seq(
-  scalaVersion       := "2.12.12",
+  scalaVersion       := "2.13.4",
   scalacOptions     ++= Seq(
     "-deprecation",
     "-encoding", "UTF-8",
@@ -7,10 +7,8 @@ lazy val baseSettings: Seq[Setting[_]] = Seq(
     "-language:higherKinds",
     "-language:implicitConversions", "-language:existentials",
     "-unchecked",
-    "-Yno-adapted-args",
     "-Ywarn-numeric-widen",
-    "-Ywarn-value-discard",
-    "-Xfuture"
+    "-Ywarn-value-discard"
   ),
   resolvers += Resolver.sonatypeRepo("releases")
 )
@@ -30,8 +28,8 @@ lazy val slides = project
   .settings(moduleName := "LilleFP-slides")
   .settings(baseSettings: _*)
   .settings(
-    tutSourceDirectory := baseDirectory.value / "tut",
-    tutTargetDirectory := baseDirectory.value / "../docs",
+    mdocIn := baseDirectory.value / "mdoc",
+    mdocOut := baseDirectory.value / "../docs",
     cleanFiles := cleanFiles.value :+ baseDirectory.value / "../docs"
   ).dependsOn(core)
-  .enablePlugins(TutPlugin)
+  .enablePlugins(MdocPlugin)
