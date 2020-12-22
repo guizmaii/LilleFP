@@ -2004,8 +2004,8 @@ It'll depend on your programming language and/or the implementation you choose.
 
 In Scala, there're 3 different implementations:
   - .underlined[Monix], which named it .blue[`Task`]: https://monix.io/
-  - .underlined[Cats-Effects], which named it .blue[`IO`]: https://github.com/typelevel/cats-effect
-  - .underlined[ZIO], which implemented a bifunctor IO Monad named .blue[`ZIO`]: https://scalaz.github.io/scalaz-zio/
+  - .underlined[Cats-Effects], which named it .blue[`IO`]: https://typelevel.org/cats-effect/
+  - .underlined[ZIO], which implemented a bifunctor IO Monad named .blue[`ZIO`]: https://zio.dev/
 ---
 # 8. Pure FP
 
